@@ -27,7 +27,7 @@ namespace Seralyth
 {
     public static class Plugin
     {
-        // For SharpMonoInjector usage
+        // For SharpMonoInjector usage :3
         // Don't merge these methods, it just doesn't work
         public static void Inject()
         {
