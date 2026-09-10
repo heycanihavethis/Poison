@@ -111,9 +111,9 @@ If you wish to support us, here are some of the ways you can!
 
 | Platform   | Link | Address |
 |------------|------|---------|
-| Ethereum   | [![ETH](https://img.shields.io/badge/Ethereum-Donate-blue?style=for-the-badge&logo=ethereum)](ethereum:0xc14846DF02f45D02a3A5750B21e6e1533ab129Dd) | [0xc14846DF02f45D02a3A5750B21e6e1533ab129Dd](ethereum:0xc14846DF02f45D02a3A5750B21e6e1533ab129Dd) |
-| Litecoin   | [![LTC](https://img.shields.io/badge/Litecoin-Donate-lightgrey?style=for-the-badge&logo=litecoin)](litecoin:Ld5c7DVKgq7EnCLJs6DhwHi8eLhPYGQtC9) | [Ld5c7DVKgq7EnCLJs6DhwHi8eLhPYGQtC9](litecoin:Ld5c7DVKgq7EnCLJs6DhwHi8eLhPYGQtC9) |
-| Patreon    | [![Patreon](https://img.shields.io/badge/Patreon-Seralyth-orange?style=for-the-badge&logo=patreon)](https://www.patreon.com/Seralyth) | [Seralyth](https://www.patreon.com/Seralyth) |
+| Ethereum   | [![ETH](https://img.shields.io/badge/Ethereum-Donate-blue?style=for-the-badge&logo=ethereum)](ethereum:0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8) | [0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8](ethereum:0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8) |
+| Litecoin   | [![LTC](https://img.shields.io/badge/Litecoin-Donate-lightgrey?style=for-the-badge&logo=litecoin)](litecoin:Ld5c7DVKgq7EnCLJs6DhwHi8eLhPYGQtC9) | [LLsDH9w52KXR1i716ohKGKuapn9KjzmgmU](litecoin:LLsDH9w52KXR1i716ohKGKuapn9KjzmgmU) |
+| Patreon    | [![Patreon](https://img.shields.io/badge/Patreon-Seralyth-orange?style=for-the-badge&logo=patreon)](https://www.patreon.com/Seralyth) | [Seralyth](https://www.patreon.com/changeleter) |
 
 </details>
 
