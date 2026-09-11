@@ -39,7 +39,6 @@ namespace Poison.Menu
 {
     public class UI : MonoBehaviour
     {
-        // TODO: Convert this class to the assetbundle during TMPro migration
         public static UI Instance;
         public static Texture2D watermarkImage;
 

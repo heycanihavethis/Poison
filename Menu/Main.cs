@@ -7010,7 +7010,7 @@ jgs \_   _/ |Oo\
         public static ExtGradient backgroundColor = new ExtGradient
         {
             colors = ExtGradient.GetSolidGradient(
-                new Color32(118, 6, 252, 128)
+                new Color32(6, 252, 118, 128)
             )
         };
 
@@ -7025,13 +7025,13 @@ jgs \_   _/ |Oo\
             new ExtGradient // Released
             {
                 colors = ExtGradient.GetSolidGradient(
-                    new Color32(118, 6, 252, 255)
+                    new Color32(6, 252, 118, 255)
                 )
             },
             new ExtGradient // Pressed
             {
                 colors = ExtGradient.GetSolidGradient(
-                    new Color32(88, 6, 186, 255)
+                    new Color32(4, 188, 88, 255)
                 )
             }
         };

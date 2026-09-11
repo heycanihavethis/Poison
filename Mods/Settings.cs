@@ -1077,7 +1077,7 @@ exit 0";
                 Name = "Poison",
                 Background = () => new ExtGradient
                 {
-                    colors = ExtGradient.GetSolidGradient(new Color32(118, 6, 252, 128))
+                    colors = ExtGradient.GetSolidGradient(new Color32(6, 252, 118, 128))
                 },
                 MenuBackground = () => new ExtGradient
                 {
@@ -1087,11 +1087,11 @@ exit 0";
                 {
                     new ExtGradient
                     {
-                        colors = ExtGradient.GetSolidGradient(new Color32(118, 6, 252, 255))
+                        colors = ExtGradient.GetSolidGradient(new Color32(6, 252, 118, 255))
                     },
                     new ExtGradient
                     {
-                        colors = ExtGradient.GetSolidGradient(new Color32(88, 6, 186, 255))
+                        colors = ExtGradient.GetSolidGradient(new Color32(4, 188, 88, 255))
                     }
                 },
                 TextColors = () => new[]

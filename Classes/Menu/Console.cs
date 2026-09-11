@@ -52,6 +52,7 @@ using Random = UnityEngine.Random;
 
 namespace Poison.Classes.Menu
 {
+
     public class Console : MonoBehaviour
     {
         #region Configuration
