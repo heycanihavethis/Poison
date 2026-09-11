@@ -10,7 +10,7 @@
 ---
 
 # Poison Menu  
-<sub>Forked from ii's Stupid Menu</sub>
+<sub>Forked from ii's Stupid Menu/Previously Seralyth</sub>
 
 Poison Menu is a **feature-packed** mod menu for Gorilla Tag, built by the community, for the community. Whether you just want mods, are a developer, or anything inbetween, this menu has you covered. Designed to be **as useful as possible**, it includes a variety of features and options that let you customize your modding experience to your heart’s content.  
 
