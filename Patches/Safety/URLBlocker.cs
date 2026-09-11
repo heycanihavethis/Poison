@@ -56,7 +56,7 @@ namespace Poison.Patches.Safety
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        string json = await client.GetStringAsync("https://menu.Poison.software/banned_urls");
+                        string json = await client.GetStringAsync("https://menu.shibagt.com/poison/banned_urls");
                         var parsed = JsonConvert.DeserializeObject<BanResponse>(json);
 
                         if (parsed?.banned != null)
