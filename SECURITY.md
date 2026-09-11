@@ -1,7 +1,7 @@
 # 🛡️ Security Policy
 Find a vulnerable exploit with the menu? Please get in touch with me in the following ways:
 - Private GitHub security forms: https://github.com/heycanihavethis/Poison/security/advisories/new
-- Email: inquiries@Poison.software
+- Email: inquiries@shibagt.com
 
 > [!CAUTION]
 > Please do not post any found vulnerabilities publically anywhere. I wish to have all security and privacy related issues handled safely.
