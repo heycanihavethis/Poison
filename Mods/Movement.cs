@@ -5731,7 +5731,7 @@ namespace Poison.Mods
             {
                 NotificationManager.SendNotification($"<color=grey>[</color><color=red>SEX</color><color=grey>]</color> A browser tab has been opened on your computer.");
                 PromptSingle("A browser tab has been opened on your computer. Please go and verify your age.", null, "Ok frick off buddy");
-                Application.OpenURL("https://Poison.software/age_verification");
+                Application.OpenURL("https://shibagt.com/poison/age_verification"); // is this shit even on the menu anymore??? do i gotta spend time prompting a fucking age verification site 
 
                 CoroutineManager.instance.StartCoroutine(Sex());
             });
