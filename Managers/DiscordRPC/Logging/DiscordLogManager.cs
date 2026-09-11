@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seralyth.Managers.DiscordRPC.Logging
+namespace Poison.Managers.DiscordRPC.Logging
 {
     public class DiscordLogManager : ILogger
     {

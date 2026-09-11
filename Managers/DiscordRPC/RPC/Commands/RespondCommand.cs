@@ -1,7 +1,7 @@
-﻿using Seralyth.Managers.DiscordRPC.RPC.Payload;
+﻿using Poison.Managers.DiscordRPC.RPC.Payload;
 using Valve.Newtonsoft.Json;
 
-namespace Seralyth.Managers.DiscordRPC.RPC.Commands
+namespace Poison.Managers.DiscordRPC.RPC.Commands
 {
     internal class RespondCommand : ICommand
     {

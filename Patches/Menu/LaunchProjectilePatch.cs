@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Patches/Menu/LaunchProjectilePatch.cs
+ * Poison Menu  Patches/Menu/LaunchProjectilePatch.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
  */
 
 using HarmonyLib;
-using Seralyth.Extensions;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.AssetUtilities;
+using Poison.Extensions;
+using static Poison.Menu.Main;
+using static Poison.Utilities.AssetUtilities;
 
-namespace Seralyth.Patches.Menu
+namespace Poison.Patches.Menu
 {
     [HarmonyPatch(typeof(ProjectileWeapon), nameof(ProjectileWeapon.LaunchProjectile))]
     public class LaunchProjectilePatch

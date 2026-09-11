@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Managers/AchievementManager.cs
+ * Poison Menu  Managers/AchievementManager.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,17 +19,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Classes.Menu;
-using Seralyth.Extensions;
-using Seralyth.Menu;
+using Poison.Classes.Menu;
+using Poison.Extensions;
+using Poison.Menu;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Valve.Newtonsoft.Json.Linq;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.AssetUtilities;
+using static Poison.Menu.Main;
+using static Poison.Utilities.AssetUtilities;
 
-namespace Seralyth.Managers
+namespace Poison.Managers
 {
     public static class AchievementManager
     {

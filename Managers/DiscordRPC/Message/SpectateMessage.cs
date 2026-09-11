@@ -1,4 +1,4 @@
-﻿namespace Seralyth.Managers.DiscordRPC.Message
+﻿namespace Poison.Managers.DiscordRPC.Message
 {
     /// <summary>
     /// Called when the Discord Client wishes for this process to spectate a game. D -> C. 

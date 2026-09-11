@@ -5,17 +5,17 @@
 ---
 
 <p align="center">
-	<a href="https://github.com/Seralyth/Seralyth-Menu/releases"><img src="https://img.shields.io/github/v/release/Seralyth/Seralyth-Menu?label=version&style=for-the-badge"></a>
-	<a href="https://github.com/Seralyth/Seralyth-Menu/releases/latest"><img src="https://img.shields.io/github/downloads/Seralyth/Seralyth-Menu/latest/Seralyth-Menu.dll?style=for-the-badge"></a>
-	<a href="https://discord.gg/seralyth"><img src="https://img.shields.io/discord/1500168360787447909?label=discord&style=for-the-badge&color=blueviolet"></a>
+	<a href="https://github.com/heycanihavethis/Poison/releases"><img src="https://img.shields.io/github/v/release/heycanihavethis/Poison?label=version&style=for-the-badge"></a>
+	<a href="https://github.com/heycanihavethis/Poison/releases/latest"><img src="https://img.shields.io/github/downloads/heycanihavethis/Poison/latest/Poison-Menu.dll?style=for-the-badge"></a>
+	<a href="https://discord.gg/Poison"><img src="https://img.shields.io/discord/1500168360787447909?label=discord&style=for-the-badge&color=blueviolet"></a>
 </p>
 
 ---
 
-# Seralyth Menu  
+# Poison Menu  
 <sub>Forked from ii's Stupid Menu</sub>
 
-Seralyth Menu is a **feature-packed** mod menu for Gorilla Tag, built by the community, for the community. Whether you just want mods, are a developer, or anything inbetween, this menu has you covered. Designed to be **as useful as possible**, it includes a variety of features and options that let you customize your modding experience to your heart’s content.  
+Poison Menu is a **feature-packed** mod menu for Gorilla Tag, built by the community, for the community. Whether you just want mods, are a developer, or anything inbetween, this menu has you covered. Designed to be **as useful as possible**, it includes a variety of features and options that let you customize your modding experience to your heart’s content.  
 
 <details>
   <summary><b>💡 Why open-source?</b></summary>
@@ -46,13 +46,13 @@ Let's bring back the collaboration of modding. No paywalls, no secrets, no malwa
 <details>
   <summary><b>💾 Installation</b></summary>
 	
-1. **Download** the latest release **[here](https://github.com/Seralyth/Seralyth-Menu/releases/latest)**
-2. **Drag & Drop** `Seralyth-Menu.dll` into your plugins folder  
+1. **Download** the latest release **[here](https://github.com/heycanihavethis/Poison/releases/latest)**
+2. **Drag & Drop** `Poison-Menu.dll` into your plugins folder  
 3. **Launch** Gorilla Tag and enjoy!
 
 **🧱 From Source Code (for developers!)**
 
-1. Download the source code **[here](https://github.com/Seralyth/Seralyth-Menu/releases/latest)**
+1. Download the source code **[here](https://github.com/heycanihavethis/Poison/releases/latest)**
 2. Edit `Directory.Build.props` and update `<GamePath>` if your Gorilla Tag is in a custom spot
 3. Build the project with `Ctrl + Shift + B`<Br>
 ✅ The DLL will automatically go into your Gorilla Tag plugins folder
@@ -100,7 +100,7 @@ Let's bring back the collaboration of modding. No paywalls, no secrets, no malwa
 <details>
   <summary><b>🗣️ Contact Information</b></summary>
 	
-Join our [Discord](https://discord.gg/seralyth)!
+Join our [Discord](https://discord.gg/Poison)!
 
 </details>
 
@@ -113,24 +113,24 @@ If you wish to support us, here are some of the ways you can!
 |------------|------|---------|
 | Ethereum   | [![ETH](https://img.shields.io/badge/Ethereum-Donate-blue?style=for-the-badge&logo=ethereum)](ethereum:0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8) | [0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8](ethereum:0xba68a679f40d8Aa226B5FdDDAc02Ed320c6C3EB8) |
 | Litecoin   | [![LTC](https://img.shields.io/badge/Litecoin-Donate-lightgrey?style=for-the-badge&logo=litecoin)](litecoin:Ld5c7DVKgq7EnCLJs6DhwHi8eLhPYGQtC9) | [LLsDH9w52KXR1i716ohKGKuapn9KjzmgmU](litecoin:LLsDH9w52KXR1i716ohKGKuapn9KjzmgmU) |
-| Patreon    | [![Patreon](https://img.shields.io/badge/Patreon-Seralyth-orange?style=for-the-badge&logo=patreon)](https://www.patreon.com/Seralyth) | [Seralyth](https://www.patreon.com/changeleter) |
+| Patreon    | [![Patreon](https://img.shields.io/badge/Patreon-Poison-orange?style=for-the-badge&logo=patreon)](https://www.patreon.com/Poison) | [Poison](https://www.patreon.com/changeleter) |
 
 </details>
 
 > [!NOTE] 
 > This product is not affiliated with Gorilla Tag or Another Axiom LLC and is not endorsed or otherwise sponsored by Another Axiom LLC. Portions of the materials contained herein are property of Another Axiom LLC. © 2026 Another Axiom LLC.<br>
-> Menu sends requests to https://menu.seralyth.software for telemetry, administrative, and TTS (text to speech) purposes.<br>
+> Menu sends requests to https://menu.Poison.software for telemetry, administrative, and TTS (text to speech) purposes.<br>
 > Menu sends requests to https://text.pollinations.ai for the mod **AI Assistant**. (when enabled)<br>
 > Menu sends requests to https://lazypy.ro for many TTS voices.<br>
-> Menu connects to wss://menu.seralyth.software for friend system and administrative purposes.<br>
-> **Read our [Privacy Policy](https://seralyth.software/policy?tab=privacy) (https://seralyth.software/policy) for details on how this data is collected and used.**<br>
+> Menu connects to wss://menu.Poison.software for friend system and administrative purposes.<br>
+> **Read our [Privacy Policy](https://Poison.software/policy?tab=privacy) (https://Poison.software/policy) for details on how this data is collected and used.**<br>
 > The donate, search, star and speak symbols are provided from [Icons8](https://icons8.com).
 
-> Seralyth Menu  README.md<br>
+> Poison Menu  README.md<br>
 > A community driven mod menu for Gorilla Tag with over 1000+ mods
 >
-> Copyright (C) 2026  Seralyth Software
-> https://github.com/Seralyth/Seralyth-Menu
+> Copyright (C) 2026  Poison Software
+> https://github.com/heycanihavethis/Poison
 > 
 > This program is free software: you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by
@@ -147,4 +147,4 @@ If you wish to support us, here are some of the ways you can!
 
 > This product is not affiliated with Another Axiom Inc. or its videogames Gorilla Tag and Orion Drift and is not endorsed or otherwise sponsored by Another Axiom. Portions of the materials contained herein are property of Another Axiom. ©2021 Another Axiom Inc.
 
-> The names "Seralyth", "Seralyth Software", logos, artwork, and branding are not covered by this license.
+> The names "Poison", "Poison Software", logos, artwork, and branding are not covered by this license.

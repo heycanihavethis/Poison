@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Patches/Menu/DistancePatch.cs
+ * Poison Menu  Patches/Menu/DistancePatch.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,11 @@
  */
 
 using HarmonyLib;
-using Seralyth.Menu;
-using Seralyth.Utilities;
+using Poison.Menu;
+using Poison.Utilities;
 using UnityEngine;
 
-namespace Seralyth.Patches.Menu
+namespace Poison.Patches.Menu
 {
     [HarmonyPatch(typeof(VRRig), nameof(VRRig.IsPositionInRange))]
     public class DistancePatch

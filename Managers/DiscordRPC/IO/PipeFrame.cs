@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using Valve.Newtonsoft.Json;
 
-namespace Seralyth.Managers.DiscordRPC.IO
+namespace Poison.Managers.DiscordRPC.IO
 {
     /// <summary>
     /// A frame received and sent to the Discord client for RPC communications.

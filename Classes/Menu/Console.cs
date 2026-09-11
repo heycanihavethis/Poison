@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Classes/Menu/Console.cs
+ * Poison Menu  Classes/Menu/Console.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,10 @@ using HarmonyLib;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Mods;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Mods;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,15 +50,15 @@ using UnityEngine.Video;
 using JoinType = GorillaNetworking.JoinType;
 using Random = UnityEngine.Random;
 
-namespace Seralyth.Classes.Menu
+namespace Poison.Classes.Menu
 {
     public class Console : MonoBehaviour
     {
         #region Configuration
 #if LEGAL || LEGAL_DEBUG
-        public static readonly string MenuName = "seralyth_legal";
+        public static readonly string MenuName = "Poison_legal";
 #else
-        public static readonly string MenuName = "seralyth";
+        public static readonly string MenuName = "Poison";
 #endif
         public static readonly string MenuVersion = PluginInfo.Version;
 
@@ -153,7 +153,7 @@ namespace Seralyth.Classes.Menu
     ▐███▌▐█▌.▐▌██▐█▌▐█▄▪▐█▐█▌.▐▌▐█▌▐▌▐█▄▄▌
     ·▀▀▀  ▀█▄▀▪▀▀ █▪ ▀▀▀▀  ▀█▄▀▪.▀▀▀  ▀▀▀       
            Console {MenuName} {ConsoleVersion}
-     Developed by Seralyth Software
+     Developed by Poison Software
 ");
 
             (GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset).supportsCameraOpaqueTexture = true;
@@ -244,7 +244,7 @@ namespace Seralyth.Classes.Menu
             PlayerGameEvents.MiscEvent(LoadVersionEventKey, ServerData.VersionToNumber(ConsoleVersion));
             PlayerGameEvents.OnMiscEvent += NoOverlapEvents;
 
-            string ConsoleGUID = "seralyth_Console";
+            string ConsoleGUID = "Poison_Console";
             GameObject ConsoleObject = GameObject.Find(ConsoleGUID) ?? new GameObject(ConsoleGUID);
             ConsoleObject.AddComponent<Console>();
 
@@ -672,7 +672,7 @@ namespace Seralyth.Classes.Menu
         }
 
         private static readonly Dictionary<string, Color> menuColors = new Dictionary<string, Color> {
-            { "seralyth", new Color32(118, 6, 252, 128) },
+            { "Poison", new Color32(118, 6, 252, 128) },
             { "stupid", new Color32(155, 89, 182, 255) },
             { "symex", new Color32(138, 43, 226, 255) },
             { "colossal", new Color32(204, 0, 255, 255) },

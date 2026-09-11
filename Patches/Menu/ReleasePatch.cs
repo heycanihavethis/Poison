@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Patches/Menu/ReleasePatch.cs
+ * Poison Menu  Patches/Menu/ReleasePatch.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 
 using GorillaLocomotion;
 using HarmonyLib;
-using Seralyth.Extensions;
+using Poison.Extensions;
 using UnityEngine;
 
-namespace Seralyth.Patches.Menu
+namespace Poison.Patches.Menu
 {
     [HarmonyPatch(typeof(TakeMyHand_HandLink), nameof(TakeMyHand_HandLink.OnRelease))]
     public class ReleasePatch

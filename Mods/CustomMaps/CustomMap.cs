@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Mods/CustomMaps/CustomMap.cs
+ * Poison Menu  Mods/CustomMaps/CustomMap.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Classes.Menu;
+using Poison.Classes.Menu;
 
-namespace Seralyth.Mods.CustomMaps
+namespace Poison.Mods.CustomMaps
 {
     public abstract class CustomMap
     {

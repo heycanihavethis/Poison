@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seralyth.Managers.DiscordRPC.Message
+namespace Poison.Managers.DiscordRPC.Message
 {
     /// <summary>
     /// Messages received from discord.

@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Mods/Movement.cs
+ * Poison Menu  Mods/Movement.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,13 @@ using GorillaLocomotion.Swimming;
 using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Classes.Menu;
-using Seralyth.Classes.Mods;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Patches.Menu;
-using Seralyth.Utilities;
+using Poison.Classes.Menu;
+using Poison.Classes.Mods;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Patches.Menu;
+using Poison.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,14 +47,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.XR;
 using Valve.Newtonsoft.Json.Linq;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.RandomUtilities;
-using static Seralyth.Utilities.RigUtilities;
+using static Poison.Menu.Main;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.RandomUtilities;
+using static Poison.Utilities.RigUtilities;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Seralyth.Mods
+namespace Poison.Mods
 {
     public static class Movement
     {
@@ -5731,7 +5731,7 @@ namespace Seralyth.Mods
             {
                 NotificationManager.SendNotification($"<color=grey>[</color><color=red>SEX</color><color=grey>]</color> A browser tab has been opened on your computer.");
                 PromptSingle("A browser tab has been opened on your computer. Please go and verify your age.", null, "Ok frick off buddy");
-                Application.OpenURL("https://seralyth.software/age_verification");
+                Application.OpenURL("https://Poison.software/age_verification");
 
                 CoroutineManager.instance.StartCoroutine(Sex());
             });

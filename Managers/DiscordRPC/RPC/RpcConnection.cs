@@ -1,16 +1,16 @@
-﻿using Seralyth.Managers.DiscordRPC.Events;
-using Seralyth.Managers.DiscordRPC.Helper;
-using Seralyth.Managers.DiscordRPC.IO;
-using Seralyth.Managers.DiscordRPC.Logging;
-using Seralyth.Managers.DiscordRPC.Message;
-using Seralyth.Managers.DiscordRPC.RPC.Commands;
-using Seralyth.Managers.DiscordRPC.RPC.Payload;
+﻿using Poison.Managers.DiscordRPC.Events;
+using Poison.Managers.DiscordRPC.Helper;
+using Poison.Managers.DiscordRPC.IO;
+using Poison.Managers.DiscordRPC.Logging;
+using Poison.Managers.DiscordRPC.Message;
+using Poison.Managers.DiscordRPC.RPC.Commands;
+using Poison.Managers.DiscordRPC.RPC.Payload;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using Valve.Newtonsoft.Json;
 
-namespace Seralyth.Managers.DiscordRPC.RPC
+namespace Poison.Managers.DiscordRPC.RPC
 {
     /// <summary>
     /// Communicates between the client and discord through RPC

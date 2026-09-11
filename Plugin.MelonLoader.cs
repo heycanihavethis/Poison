@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Plugin.MelonLoader.cs
+ * Poison Menu  Plugin.MelonLoader.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 
 
 using MelonLoader;
-using Seralyth.Managers;
+using Poison.Managers;
 
-[assembly: MelonInfo(typeof(Seralyth.PluginMelonLoader), Seralyth.PluginInfo.Name, Seralyth.PluginInfo.Version, "Seralyth")]
+[assembly: MelonInfo(typeof(Poison.PluginMelonLoader), Poison.PluginInfo.Name, Poison.PluginInfo.Version, "Poison")]
 [assembly: MelonOptionalDependencies("BepInEx")]
-namespace Seralyth
+namespace Poison
 {
     public class PluginMelonLoader : MelonMod
     {

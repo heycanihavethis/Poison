@@ -1,5 +1,5 @@
 ﻿
-namespace Seralyth.Managers.DiscordRPC.Message
+namespace Poison.Managers.DiscordRPC.Message
 {
     /// <summary>
     /// Type of message.

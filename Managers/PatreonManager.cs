@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Managers/PatreonManager.cs
+ * Poison Menu  Managers/PatreonManager.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,21 +22,21 @@
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Classes.Menu;
-using Seralyth.Extensions;
-using Seralyth.Menu;
-using Seralyth.Mods;
-using Seralyth.Utilities;
+using Poison.Classes.Menu;
+using Poison.Extensions;
+using Poison.Menu;
+using Poison.Mods;
+using Poison.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.RigUtilities;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.RigUtilities;
 
-namespace Seralyth.Managers
+namespace Poison.Managers
 {
     public class PatreonManager : MonoBehaviour
     {
@@ -129,7 +129,7 @@ namespace Seralyth.Managers
                     playerIndicator.GetComponent<Renderer>().material.mainTexture = LoadTextureFromURL(member.Value.IconURL, $"Images/Patreon/{member.Key.UserId}.{FileUtilities.GetFileExtension(member.Value.IconURL)}"); // errors?
                     playerIndicator.GetComponent<Renderer>().material.color = Color.white;
 
-                    GameObject go = new GameObject("Seralyth_Nametag");
+                    GameObject go = new GameObject("Poison_Nametag");
                     go.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
                     TextMeshPro textMesh = go.AddComponent<TextMeshPro>();
                     textMesh.fontSize = 4.8f;
@@ -150,7 +150,7 @@ namespace Seralyth.Managers
                 playerIndicator.transform.position = Visuals.GetNameTagTransform(playerRig).position + Visuals.GetNameTagTransform(playerRig).up * (distance * playerRig.scaleFactor);
                 playerIndicator.transform.LookAt(GorillaTagger.Instance.headCollider.transform.position);
 
-                GameObject nameTag = playerIndicator.transform.Find("Seralyth_Nametag").gameObject;
+                GameObject nameTag = playerIndicator.transform.Find("Poison_Nametag").gameObject;
                 nameTag.transform.position = Visuals.GetNameTagTransform(playerRig).position + Visuals.GetNameTagTransform(playerRig).up * ((distance + 0.25f) * playerRig.scaleFactor);
                 nameTag.transform.LookAt(Camera.main.transform.position);
                 nameTag.transform.Rotate(0f, 180f, 0f);

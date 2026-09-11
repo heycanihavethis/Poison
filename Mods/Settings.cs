@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Mods/Settings.cs
+ * Poison Menu  Mods/Settings.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@ using GorillaExtensions;
 using GorillaLocomotion;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Classes.Menu;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Patches.Menu;
-using Seralyth.Utilities;
+using Poison.Classes.Menu;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Patches.Menu;
+using Poison.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,14 +44,14 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.Windows.Speech;
 using UnityEngine.XR;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.RigUtilities;
-using Console = Seralyth.Classes.Menu.Console;
+using static Poison.Menu.Main;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.RigUtilities;
+using Console = Poison.Classes.Menu.Console;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Seralyth.Mods
+namespace Poison.Mods
 {
     public static class Settings
     {
@@ -246,7 +246,7 @@ namespace Seralyth.Mods
 
             if (TutorialSelector == null)
             {
-                TutorialSelector = new GameObject("Seralyth_TutorialSelector").AddComponent<LineRenderer>();
+                TutorialSelector = new GameObject("Poison_TutorialSelector").AddComponent<LineRenderer>();
                 TutorialSelector.material.shader = Shader.Find("Sprites/Default");
 
                 TutorialSelector.startWidth = 0.01f;
@@ -317,7 +317,7 @@ namespace Seralyth.Mods
             string version = PluginInfo.Version;
             if (PluginInfo.BetaBuild) version = "<color=blue>Beta</color> " + version;
             Buttons.AddButton(category, new ButtonInfo { buttonText = "Exit Info Screen", method = () => Toggle("Info Screen"), isTogglable = false, toolTip = "Returns you back to the main page." });
-            Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugMenuName", overlapText = "<color=grey><b>Seralyth Menu </b></color>" + version, label = true });
+            Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugMenuName", overlapText = "<color=grey><b>Poison Menu </b></color>" + version, label = true });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugColor", overlapText = "Loading...", label = true });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugName", overlapText = "Loading...", label = true });
             Buttons.AddButton(category, new ButtonInfo { buttonText = "DebugId", overlapText = "Loading...", label = true });
@@ -678,7 +678,7 @@ namespace Seralyth.Mods
         {
             CleanupSpectateCamera();
 
-            spectateCameraObject = new GameObject("Seralyth_SpectateCamera");
+            spectateCameraObject = new GameObject("Poison_SpectateCamera");
             spectateRenderTexture = new RenderTexture(512, 512, 16);
             spectateCameraObject.AddComponent<Camera>().targetTexture = spectateRenderTexture;
             spectateCameraObject.transform.SetParent(rig.headMesh.transform, false);
@@ -862,7 +862,7 @@ namespace Seralyth.Mods
                             logoLines += Environment.NewLine + @" ""    " + line + @" """;
 
                         string updateScript = @"@echo off
-title Seralyth Menu Updater
+title Poison Menu Updater
 color 5
 setlocal
 
@@ -879,7 +879,7 @@ set ""MODS_PATH=%BASE_DIR%Mods""
 
 set ""MENU_FILE=""
 
-for %%F in (""%PLUGIN_PATH%\*Seralyth*Menu*.dll"" ""%MODS_PATH%\*Seralyth*Menu*.dll"") do (
+for %%F in (""%PLUGIN_PATH%\*Poison*Menu*.dll"" ""%MODS_PATH%\*Poison*Menu*.dll"") do (
     if exist ""%%~fF"" (
         set ""MENU_FILE=%%~fF""
         goto update
@@ -892,14 +892,14 @@ goto restart
 :update
 echo Found menu file: ""%MENU_FILE%""
 
-set ""DOWNLOAD_NAME=Seralyth-Menu""
+set ""DOWNLOAD_NAME=Poison-Menu""
 echo %MENU_FILE% | find /I ""Legal"" >nul
-if %ERRORLEVEL%==0 set ""DOWNLOAD_NAME=Seralyth-Menu-Legal""
+if %ERRORLEVEL%==0 set ""DOWNLOAD_NAME=Poison-Menu-Legal""
 
 echo Downloading latest release of %DOWNLOAD_NAME%...
 
 curl -L -o ""%MENU_FILE%"" ^
-""https://github.com/Seralyth/Seralyth-Menu/releases/latest/download/%DOWNLOAD_NAME%.dll""
+""https://github.com/heycanihavethis/Poison/releases/latest/download/%DOWNLOAD_NAME%.dll""
 
 :WAIT_LOOP
 tasklist /FI ""IMAGENAME eq Gorilla Tag.exe"" | find /I ""Gorilla Tag.exe"" >nul
@@ -942,7 +942,7 @@ MODS_PATH=""$BASE_DIR/Mods""
 
 MENU_FILE=""""
 
-for f in ""$PLUGIN_PATH""/*Seralyth*Menu*.dll ""$MODS_PATH""/*Seralyth*Menu*.dll; do
+for f in ""$PLUGIN_PATH""/*Poison*Menu*.dll ""$MODS_PATH""/*Poison*Menu*.dll; do
     if [ -f ""$f"" ]; then
         MENU_FILE=""$f""
         break
@@ -954,14 +954,14 @@ if [ -z ""$MENU_FILE"" ]; then
 else
     echo ""Found menu file: $MENU_FILE""
 
-    DOWNLOAD_NAME=""Seralyth-Menu""
+    DOWNLOAD_NAME=""Poison-Menu""
     if echo ""$MENU_FILE"" | grep -qi ""Legal""; then
-        DOWNLOAD_NAME=""Seralyth-Menu-Legal""
+        DOWNLOAD_NAME=""Poison-Menu-Legal""
     fi
 
     echo ""Downloading latest release of $DOWNLOAD_NAME...""
     curl -L -o ""$MENU_FILE"" \
-    ""https://github.com/Seralyth/Seralyth-Menu/releases/latest/download/${DOWNLOAD_NAME}.dll""
+    ""https://github.com/heycanihavethis/Poison/releases/latest/download/${DOWNLOAD_NAME}.dll""
 fi
 
 while pgrep -f ""GorillaTag.exe"" > /dev/null; do
@@ -1074,7 +1074,7 @@ exit 0";
         {
             new ThemeDefinition
             {
-                Name = "Seralyth",
+                Name = "Poison",
                 Background = () => new ExtGradient
                 {
                     colors = ExtGradient.GetSolidGradient(new Color32(118, 6, 252, 128))
@@ -4029,18 +4029,18 @@ exit 0";
                 {
                     PromptSingleText("What would you like to set the menu name to?", () =>
                     {
-                        File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt", keyboardInput);
+                        File.WriteAllText($"{PluginInfo.BaseDirectory}/Poison_CustomMenuName.txt", keyboardInput);
                         Apply();
-                        PromptSingle("You can always change this again by re-enabling the mod or changing it in the SeralythMenu folder! (located in the Gorilla Tag installation folder)");
+                        PromptSingle("You can always change this again by re-enabling the mod or changing it in the PoisonMenu folder! (located in the Gorilla Tag installation folder)");
                     });
                 }, Apply);
 
                 static void Apply()
                 {
                     doCustomName = true;
-                    if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt"))
-                        File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt", "Your Text Here");
-                    customMenuName = File.ReadAllText($"{PluginInfo.BaseDirectory}/Seralyth_CustomMenuName.txt");
+                    if (!File.Exists($"{PluginInfo.BaseDirectory}/Poison_CustomMenuName.txt"))
+                        File.WriteAllText($"{PluginInfo.BaseDirectory}/Poison_CustomMenuName.txt", "Your Text Here");
+                    customMenuName = File.ReadAllText($"{PluginInfo.BaseDirectory}/Poison_CustomMenuName.txt");
                 }
                 Apply();
             }
@@ -4059,13 +4059,13 @@ exit 0";
 
         private static KeywordRecognizer mainPhrases;
         private static KeywordRecognizer modPhrases;
-        private static string[] keyWords = { "jarvis", "seralyth", "seralith", "sarolith", "siri", "google", "alexa", "dummy", "computer", "stinky", "silly", "stupid", "console", "go go gadget", "monika", "wikipedia", "gideon", "a i", "ai", "a.i", "chat gpt", "chatgpt", "grok", "grock", "groq", "garmin" };
+        private static string[] keyWords = { "jarvis", "Poison", "seralith", "sarolith", "siri", "google", "alexa", "dummy", "computer", "stinky", "silly", "stupid", "console", "go go gadget", "monika", "wikipedia", "gideon", "a i", "ai", "a.i", "chat gpt", "chatgpt", "grok", "grock", "groq", "garmin" };
         private static readonly string[] cancelKeywords = { "nevermind", "cancel", "never mind", "stop", "i hate you", "die" };
         public static void VoiceRecognitionOn()
         {
-            if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt"))
-                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt", keyWords);
-            keyWords = File.ReadAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt");
+            if (!File.Exists($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt"))
+                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt", keyWords);
+            keyWords = File.ReadAllLines($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt");
             mainPhrases = new KeywordRecognizer(keyWords);
             mainPhrases.OnPhraseRecognized += ModRecognition;
             mainPhrases.Start();
@@ -4226,9 +4226,9 @@ exit 0";
             else if (PhraseRecognitionSystem.Status != SpeechSystemStatus.Stopped)
                 PromptSingle("You can not use AI Assistant while you have another voice-related mod on.", () => mod.SetEnabled(false), "Ok");
 
-            if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt"))
-                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt", keyWords);
-            keyWords = File.ReadAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt");
+            if (!File.Exists($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt"))
+                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt", keyWords);
+            keyWords = File.ReadAllLines($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt");
 
             while (PhraseRecognitionSystem.Status != SpeechSystemStatus.Stopped)
                 yield return null;
@@ -4843,7 +4843,7 @@ exit 0";
 
                 if (clickGuiLine == null)
                 {
-                    clickGuiLine = new GameObject("Seralyth_ClickGUILine")
+                    clickGuiLine = new GameObject("Poison_ClickGUILine")
                         .GetOrAddComponent<LineRenderer>();
 
                     clickGuiLine.material = new Material(Shader.Find("GUI/Text Shader"));
@@ -4992,7 +4992,7 @@ exit 0";
                 if (canSelect)
                 {
                     if (selectObject == null)
-                        selectObject = new GameObject("Seralyth_PingLine");
+                        selectObject = new GameObject("Poison_PingLine");
 
                     Color targetColor = Buttons.GetIndex("Swap GUI Colors").enabled ? buttonColors[1].GetCurrentColor() : backgroundColor.GetCurrentColor();
                     Color lineColor = targetColor;
@@ -5169,14 +5169,14 @@ exit 0";
 
         public static void ResetVoiceCommandsKeywords()
         {
-            if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt"))
-                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Seralyth_Keywords.txt", keyWords);
+            if (!File.Exists($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt"))
+                File.WriteAllLines($"{PluginInfo.BaseDirectory}/Poison_Keywords.txt", keyWords);
         }
 
         public static void ResetSystemPrompt()
         {
-            if (!File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_SystemPrompt.txt"))
-                File.WriteAllText($"{PluginInfo.BaseDirectory}/Seralyth_SystemPrompt.txt", AIManager.SystemPrompt);
+            if (!File.Exists($"{PluginInfo.BaseDirectory}/Poison_SystemPrompt.txt"))
+                File.WriteAllText($"{PluginInfo.BaseDirectory}/Poison_SystemPrompt.txt", AIManager.SystemPrompt);
         }
 
         public static string SavePreferencesToText()
@@ -5710,7 +5710,7 @@ exit 0";
 
         public static void LoadPCControls()
         {
-            string fileName = $"{PluginInfo.BaseDirectory}/Seralyth_PCControls.txt";
+            string fileName = $"{PluginInfo.BaseDirectory}/Poison_PCControls.txt";
 
             if (File.Exists(fileName))
             {

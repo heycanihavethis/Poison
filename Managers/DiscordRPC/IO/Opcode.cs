@@ -1,4 +1,4 @@
-﻿namespace Seralyth.Managers.DiscordRPC.IO
+﻿namespace Poison.Managers.DiscordRPC.IO
 {
     /// <summary>
     /// The operation code that the <see cref="PipeFrame"/> was sent under. This defines the type of frame and the data to expect.

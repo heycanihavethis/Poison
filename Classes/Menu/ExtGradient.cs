@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Classes/Menu/ExtGradient.cs
+ * Poison Menu  Classes/Menu/ExtGradient.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Extensions;
-using Seralyth.Menu;
+using Poison.Extensions;
+using Poison.Menu;
 using System;
 using System.Linq;
 using UnityEngine;
-using static Seralyth.Utilities.RandomUtilities;
+using static Poison.Utilities.RandomUtilities;
 
-namespace Seralyth.Classes.Menu
+namespace Poison.Classes.Menu
 {
     public class ExtGradient
     {

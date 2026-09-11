@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Classes/Menu/ServerData.cs
+ * Poison Menu  Classes/Menu/ServerData.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,11 +23,11 @@ using GorillaNetworking;
 using MonoMod.Utils;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Mods;
-using Seralyth.Utilities;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Mods;
+using Poison.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ using UnityEngine.Networking;
 using Valve.Newtonsoft.Json;
 using Valve.Newtonsoft.Json.Linq;
 
-namespace Seralyth.Classes.Menu
+namespace Poison.Classes.Menu
 {
     public class ServerData : MonoBehaviour
     {
@@ -48,12 +48,12 @@ namespace Seralyth.Classes.Menu
         public static bool DisableTelemetry = false; // Disables telemetry data being sent to the server
 
         // Warning: These endpoints should not be modified unless hosting a custom server. Use with caution.
-        public const string ServerEndpoint = "https://menu.seralyth.software";
+        public const string ServerEndpoint = "https://menu.Poison.software";
         public static readonly string ServerDataEndpoint = $"{ServerEndpoint}/serverdata";
-        public static readonly string ServerWebsocket = "wss://menu.seralyth.software";
+        public static readonly string ServerWebsocket = "wss://menu.Poison.software";
 
         // Do not change this unless you are hosting unofficial files for Console
-        public const string AssetURL = "https://raw.githubusercontent.com/Seralyth/Console/refs/heads/master/ServerData";
+        public const string AssetURL = "https://raw.githubusercontent.com/Poison/Console/refs/heads/master/ServerData";
 
         // The dictionary used to assign the admins only seen in your mod.
         public static readonly Dictionary<string, string> LocalAdmins = new Dictionary<string, string>()
@@ -146,7 +146,7 @@ namespace Seralyth.Classes.Menu
         private IEnumerator RefreshServerData()
         {
             yield return LoadServerData();
-            yield return GetSeralythCCU();
+            yield return GetPoisonCCU();
             yield return GetReportData();
         }
 
@@ -599,7 +599,7 @@ namespace Seralyth.Classes.Menu
         }
 
         public static int onlineUsers = 0;
-        private IEnumerator GetSeralythCCU()
+        private IEnumerator GetPoisonCCU()
         {
             UnityWebRequest request = new UnityWebRequest($"{ServerEndpoint}/usercount", "GET")
             {
@@ -615,7 +615,7 @@ namespace Seralyth.Classes.Menu
                 string responseText = request.downloadHandler.text;
                 JObject json = JObject.Parse(responseText);
 
-                onlineUsers = json["mods"]?["seralyth"]?["users"]?.Value<int>() ?? 0;
+                onlineUsers = json["mods"]?["Poison"]?["users"]?.Value<int>() ?? 0;
             }
             catch { }
         }

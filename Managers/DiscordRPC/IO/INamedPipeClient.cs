@@ -1,7 +1,7 @@
-﻿using Seralyth.Managers.DiscordRPC.Logging;
+﻿using Poison.Managers.DiscordRPC.Logging;
 using System;
 
-namespace Seralyth.Managers.DiscordRPC.IO
+namespace Poison.Managers.DiscordRPC.IO
 {
     /// <summary>
     /// Pipe Client used to communicate with Discord.

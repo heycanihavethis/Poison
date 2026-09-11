@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Patches/Menu/TagPatch.cs
+ * Poison Menu  Patches/Menu/TagPatch.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,15 +21,15 @@
 
 using GorillaGameModes;
 using HarmonyLib;
-using Seralyth.Extensions;
-using Seralyth.Menu;
+using Poison.Extensions;
+using Poison.Menu;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.GameModeUtilities;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.GameModeUtilities;
 
-namespace Seralyth.Patches.Menu
+namespace Poison.Patches.Menu
 {
     [HarmonyPatch(typeof(GameMode), nameof(GameMode.ReportTag))]
     public class TagPatch

@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Mods/Safety.cs
+ * Poison Menu  Mods/Safety.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,22 +26,22 @@ using GorillaTagScripts;
 using Photon.Pun;
 using Photon.Realtime;
 using Photon.Voice.Unity;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Patches.Menu;
-using Seralyth.Patches.Safety;
-using Seralyth.Utilities;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Patches.Menu;
+using Poison.Patches.Safety;
+using Poison.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.RigUtilities;
+using static Poison.Menu.Main;
+using static Poison.Utilities.RigUtilities;
 using Random = UnityEngine.Random;
 
-namespace Seralyth.Mods
+namespace Poison.Mods
 {
     public static class Safety
     {
@@ -453,7 +453,7 @@ namespace Seralyth.Mods
                         catch { LogManager.Log("Failed to log player"); }
 
                         text += "\n====================================\n";
-                        text += "Text file generated with Seralyth Menu";
+                        text += "Text file generated with Poison Menu";
                         string fileName = $"{PluginInfo.BaseDirectory}/" + player.NickName + " - Anti Moderator.txt";
 
                         File.WriteAllText(fileName, text);
@@ -497,7 +497,7 @@ namespace Seralyth.Mods
                         catch { LogManager.Log("Failed to log player"); }
 
                         text += "\n====================================\n";
-                        text += "Text file generated with Seralyth Menu";
+                        text += "Text file generated with Poison Menu";
                         string fileName = $"{PluginInfo.BaseDirectory}/" + player.NickName + " - Anti Content Creator.txt";
 
                         File.WriteAllText(fileName, text);
@@ -670,7 +670,7 @@ namespace Seralyth.Mods
 
         public static void ChangeIdentityCustom()
         {
-            string[] names = { "seralyth", "me" };
+            string[] names = { "Poison", "me" };
             Color[] colors = { new Color32(255, 128, 0, 255), Color.white };
 
             string fileName = $"{PluginInfo.BaseDirectory}/CustomIdentities.txt";
@@ -681,7 +681,7 @@ namespace Seralyth.Mods
                 colors = data[1].Split(";").Select(HexToColor).ToArray();
             }
             else
-                File.WriteAllText(fileName, "seralyth;me\n9b59b6;ffffff");
+                File.WriteAllText(fileName, "Poison;me\n9b59b6;ffffff");
 
             string name = names[Random.Range(0, names.Length)];
             Color color = colors[Random.Range(0, colors.Length)];

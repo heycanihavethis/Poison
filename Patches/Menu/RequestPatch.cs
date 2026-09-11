@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Patches/Menu/RequestPatch.cs
+ * Poison Menu  Patches/Menu/RequestPatch.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,14 @@
 using GorillaNetworking;
 using HarmonyLib;
 using Photon.Pun;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Mods;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Mods;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-namespace Seralyth.Patches.Menu
+namespace Poison.Patches.Menu
 {
     [HarmonyPatch(typeof(VRRig), nameof(VRRig.RequestCosmetics))]
     public class RequestPatch

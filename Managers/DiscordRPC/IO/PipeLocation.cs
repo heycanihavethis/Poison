@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Seralyth.Managers.DiscordRPC.IO
+namespace Poison.Managers.DiscordRPC.IO
 {
     /// <summary>
     /// Provides the location of the Discord IPC pipes for the current operating system.

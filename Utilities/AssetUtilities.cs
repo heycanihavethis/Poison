@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Utilities/AssetUtilities.cs
+ * Poison Menu  Utilities/AssetUtilities.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Managers;
+using Poison.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -28,16 +28,16 @@ using System.Net;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Networking;
-using static Seralyth.Utilities.FileUtilities;
+using static Poison.Utilities.FileUtilities;
 
-namespace Seralyth.Utilities
+namespace Poison.Utilities
 {
     public class AssetUtilities
     {
         private static AssetBundle assetBundle;
         private static void LoadAssetBundle()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.seralythmenu");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.Poisonmenu");
             if (stream != null)
                 assetBundle = AssetBundle.LoadFromStream(stream);
             else

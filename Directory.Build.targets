@@ -1,30 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
   <PropertyGroup>
-    <IsMainProject Condition="'$(MSBuildProjectName)' == 'SeralythMenu'">true</IsMainProject>
+    <IsMainProject Condition="'$(MSBuildProjectName)' == 'PoisonMenu'">true</IsMainProject>
   </PropertyGroup>
-
-  <!-- Update Game References -->
-  <Target Name="UpdateGameReferences" BeforeTargets="BeforeBuild" Condition="'$(IsMainProject)' == 'true' AND Exists('$(GameAssemblyPath)')">
-    <ItemGroup>
-      <GameAssemblyFiles Include="$(GameAssemblyPath)\**\*" />
-    </ItemGroup>
-    <Copy
-      SourceFiles="@(GameAssemblyFiles)"
-      DestinationFolder="$(ProjectDir)References\Managed\%(RecursiveDir)"
-      SkipUnchangedFiles="true" />
-  </Target>
-
-  <!-- Update BepInEx References -->
-  <Target Name="UpdateBepInExReferences" BeforeTargets="BeforeBuild" Condition="'$(IsMainProject)' == 'true' AND Exists('$(BepInExAssemblyPath)')">
-    <ItemGroup>
-      <BepInExAssemblyFiles Include="$(BepInExAssemblyPath)\**\*" />
-    </ItemGroup>
-    <Copy
-      SourceFiles="@(BepInExAssemblyFiles)"
-      DestinationFolder="$(ProjectDir)References\core\%(RecursiveDir)"
-      SkipUnchangedFiles="true" />
-  </Target>
 
   <!-- Update Build Timestamp -->
   <Target Name="UpdateBuildTimestamp" BeforeTargets="BeforeBuild" Condition="'$(IsMainProject)' == 'true'">

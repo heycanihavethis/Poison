@@ -1,4 +1,4 @@
-﻿namespace Seralyth.Managers.DiscordRPC
+﻿namespace Poison.Managers.DiscordRPC
 {
     /// <summary>
     /// The type of event receieved by the RPC. A flag type that can be combined.

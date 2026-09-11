@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seralyth.Managers.DiscordRPC.Helper
+namespace Poison.Managers.DiscordRPC.Helper
 {
 
     internal class BackoffDelay

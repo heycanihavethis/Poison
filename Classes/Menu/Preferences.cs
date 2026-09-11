@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Mods/Preferences.cs
+ * Poison Menu  Mods/Preferences.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
  */
 
 using Photon.Pun;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Mods;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Mods;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,14 +30,14 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using Valve.Newtonsoft.Json;
-using static Seralyth.Menu.Main;
+using static Poison.Menu.Main;
 
-namespace Seralyth.Classes.Menu
+namespace Poison.Classes.Menu
 {
     public static class Preferences
     {
-        private const string FileName = "Seralyth_Preferences.json";
-        private const string LegacyFileName = "Seralyth_Preferences.txt";
+        private const string FileName = "Poison_Preferences.json";
+        private const string LegacyFileName = "Poison_Preferences.txt";
         internal static bool DisableAutoSave = false;
 
         private const int MinWriteIntervalMs = 250;

@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Mods/Advantages.cs
+ * Poison Menu  Mods/Advantages.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,19 +24,19 @@ using GorillaGameModes;
 using GorillaLocomotion;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
-using Seralyth.Patches.Menu;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
+using Poison.Patches.Menu;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.GameModeUtilities;
-using static Seralyth.Utilities.RandomUtilities;
-using static Seralyth.Utilities.RigUtilities;
+using static Poison.Menu.Main;
+using static Poison.Utilities.GameModeUtilities;
+using static Poison.Utilities.RandomUtilities;
+using static Poison.Utilities.RigUtilities;
 
-namespace Seralyth.Mods
+namespace Poison.Mods
 {
     public static class Advantages
     {

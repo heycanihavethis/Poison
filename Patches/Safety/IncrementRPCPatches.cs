@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Patches/Safety/IncrementRPCPatches.cs
+ * Poison Menu  Patches/Safety/IncrementRPCPatches.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 using HarmonyLib;
 using Photon.Pun;
 
-namespace Seralyth.Patches.Safety
+namespace Poison.Patches.Safety
 {
     public class IncrementRPCPatches
     {

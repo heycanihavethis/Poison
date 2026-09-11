@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Plugin.cs
+ * Poison Menu  Plugin.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-using Seralyth.Managers;
-using Seralyth.Menu;
+using Poison.Managers;
+using Poison.Menu;
 using UnityEngine;
 
-namespace Seralyth
+namespace Poison
 {
     public static class Plugin
     {
@@ -31,13 +31,13 @@ namespace Seralyth
         // Don't merge these methods, it just doesn't work
         public static void Inject()
         {
-            var go = new GameObject("Seralyth");
+            var go = new GameObject("Poison");
             go.AddComponent<Injector>();
         }
 
         public static void InjectDontDestroy()
         {
-            var go = new GameObject("Seralyth");
+            var go = new GameObject("Poison");
             Object.DontDestroyOnLoad(go);
             go.AddComponent<Injector>();
         }

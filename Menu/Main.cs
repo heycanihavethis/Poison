@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Menu/Main.cs
+ * Poison Menu  Menu/Main.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,14 +28,14 @@ using GorillaTagScripts;
 using HarmonyLib;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Classes.Menu;
-using Seralyth.Classes.Mods;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Mods;
-using Seralyth.Patches;
-using Seralyth.Patches.Menu;
-using Seralyth.Utilities;
+using Poison.Classes.Menu;
+using Poison.Classes.Mods;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Mods;
+using Poison.Patches;
+using Poison.Patches.Menu;
+using Poison.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,17 +58,17 @@ using UnityEngine.XR;
 using Valve.Newtonsoft.Json;
 using Valve.VR;
 using WebSocketSharp;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.FileUtilities;
-using static Seralyth.Utilities.RandomUtilities;
-using ButtonCollider = Seralyth.Classes.Menu.ButtonCollider;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.FileUtilities;
+using static Poison.Utilities.RandomUtilities;
+using ButtonCollider = Poison.Classes.Menu.ButtonCollider;
 using CommonUsages = UnityEngine.XR.CommonUsages;
-using Console = Seralyth.Classes.Menu.Console;
+using Console = Poison.Classes.Menu.Console;
 using JoinType = GorillaNetworking.JoinType;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-namespace Seralyth.Menu
+namespace Poison.Menu
 {
     [HarmonyPatch(typeof(GTPlayer), nameof(GTPlayer.LateUpdate))]
     public class Main : MonoBehaviour
@@ -93,9 +93,9 @@ namespace Seralyth.Menu
             //if (Plugin.FirstLaunch)
             //    Prompt("It seems like this is your first time using the menu. Would you like to watch a quick tutorial to get to know how to use it?", Settings.ShowTutorial);
             //else
-            //    acceptedDonations = File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_HideDonationButton.txt");
+            //    acceptedDonations = File.Exists($"{PluginInfo.BaseDirectory}/Poison_HideDonationButton.txt");
             if (!Bootstrapper.FirstLaunch)
-                acceptedDonations = File.Exists($"{PluginInfo.BaseDirectory}/Seralyth_HideDonationButton.txt");
+                acceptedDonations = File.Exists($"{PluginInfo.BaseDirectory}/Poison_HideDonationButton.txt");
 
             NetworkSystem.Instance.OnJoinedRoomEvent += OnJoinRoom;
             NetworkSystem.Instance.OnReturnedToSinglePlayer += OnLeaveRoom;
@@ -526,7 +526,7 @@ namespace Seralyth.Menu
 
                 if (animatedTitle && title != null)
                 {
-                    string targetString = doCustomName ? NoRichtextTags(customMenuName) : "Seralyth Menu";
+                    string targetString = doCustomName ? NoRichtextTags(customMenuName) : "Poison Menu";
                     int length = (int)Mathf.PingPong(Time.time / 0.25f, targetString.Length + 1);
                     title.text = length > 0 ? targetString[..length] : "";
                 }
@@ -1859,7 +1859,7 @@ namespace Seralyth.Menu
             {
                 if (buttonSpriteSheet != null) return buttonSpriteSheet;
                 buttonSpriteSheet = ScriptableObject.CreateInstance<TMP_SpriteAsset>();
-                buttonSpriteSheet.name = "Seralyth_SpriteSheet";
+                buttonSpriteSheet.name = "Poison_SpriteSheet";
 
                 var textureList = new List<Texture2D>();
                 var spriteDataList = new List<(string name, int index)>();
@@ -2374,7 +2374,7 @@ namespace Seralyth.Menu
                     case 61:
                         if (videoPlayer == null)
                         {
-                            videoPlayer = new GameObject("Seralyth_VideoPlayer").AddComponent<VideoPlayer>();
+                            videoPlayer = new GameObject("Poison_VideoPlayer").AddComponent<VideoPlayer>();
                             videoPlayer.playOnAwake = true;
                             videoPlayer.isLooping = true;
                             videoPlayer.url = $"{PluginInfo.ServerResourcePath}/Videos/Themes/badapple.mp4";
@@ -2434,7 +2434,7 @@ namespace Seralyth.Menu
                     }
                 }.AddComponent<TextMeshPro>();
                 title.font = activeFont;
-                title.text = translate ? "Seralyth" : "<b>Seralyth</b>";
+                title.text = translate ? "Poison" : "<b>Poison</b>";
 
                 if (doCustomName)
                     title.text = customMenuName;
@@ -2477,7 +2477,7 @@ namespace Seralyth.Menu
 
                 if (animatedTitle)
                 {
-                    string targetString = doCustomName ? NoRichtextTags(customMenuName) : "Seralyth Menu";
+                    string targetString = doCustomName ? NoRichtextTags(customMenuName) : "Poison Menu";
                     int length = (int)Mathf.PingPong(Time.time / 0.25f, targetString.Length);
                     title.text = length > 0 ? targetString[..length] : "";
                 }
@@ -3462,7 +3462,7 @@ namespace Seralyth.Menu
                     case "webm":
                     case "mov":
                         {
-                            promptVideoPlayer = new GameObject("Seralyth_PromptVideoPlayer").AddComponent<VideoPlayer>();
+                            promptVideoPlayer = new GameObject("Poison_PromptVideoPlayer").AddComponent<VideoPlayer>();
                             promptVideoPlayer.playOnAwake = true;
                             promptVideoPlayer.isLooping = true;
                             promptVideoPlayer.url = promptImageUrl;
@@ -4285,7 +4285,7 @@ namespace Seralyth.Menu
             if (disableGunLine) return (Ray, GunPointer);
             if (GunLine == null)
             {
-                GameObject line = new GameObject("Seralyth_GunLine");
+                GameObject line = new GameObject("Poison_GunLine");
                 GunLine = line.AddComponent<LineRenderer>();
             }
 
@@ -6801,9 +6801,9 @@ jgs \_   _/ |Oo\
         public static string customMenuName = "Your Text Here";
         public static readonly string menuName =
 #if LEGAL
-            "<b>Seralyth</b> Legal";
+            "<b>Poison</b> Legal";
 #else
-            "<b>Seralyth</b> Menu";
+            "<b>Poison</b> Menu";
 #endif
         public static bool doCustomMenuBackground;
         public static bool menuTrail;

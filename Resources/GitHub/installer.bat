@@ -6,7 +6,7 @@ setlocal enabledelayedexpansion
 chcp ANSI
 
 cls
-title Seralyth Menu Installer // [#---------] Getting directory
+title Poison Menu Installer // [#---------] Getting directory
 color 0e
 
 :: Thanks to tdcvoid for telling me the new path for Oculus
@@ -43,23 +43,23 @@ if not defined gamePath (
 
 color 0e
 cls
-title Seralyth Menu Installer // [###-------] Downloading BepInEx
+title Poison Menu Installer // [###-------] Downloading BepInEx
 curl -L "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.4/BepInEx_win_x64_5.4.23.4.zip" -o BPNX54234.zip
 
 powershell -command "Expand-Archive -Path 'BPNX54234.zip' -DestinationPath '%gamePath%' -Force"
 
 cls
-title Seralyth Menu Installer // [####------] Creating directories
+title Poison Menu Installer // [####------] Creating directories
 mkdir %gamePath%/BepInEx/config
 mkdir %gamePath%/BepInEx/plugins
 
 cls
-title Seralyth Menu Installer // [#####-----] Downloading latest config
-curl https://github.com/Seralyth/Seralyth-Menu/raw/refs/heads/master/Resources/GitHub/BepInEx.cfg -o %gamePath%/BepInEx/config/BepInEx.cfg
+title Poison Menu Installer // [#####-----] Downloading latest config
+curl https://github.com/heycanihavethis/Poison/raw/refs/heads/master/Resources/GitHub/BepInEx.cfg -o %gamePath%/BepInEx/config/BepInEx.cfg
 
 cls
-title Seralyth Menu Installer // [#######---] Downloading menu
-for /f "tokens=*" %%i in ('powershell -Command "(Invoke-RestMethod -Uri 'https://api.github.com/repos/Seralyth/Seralyth-Menu/releases/latest').assets | Where-Object { $_.name -like '*.dll' } | Select-Object -ExpandProperty browser_download_url"') do (
+title Poison Menu Installer // [#######---] Downloading menu
+for /f "tokens=*" %%i in ('powershell -Command "(Invoke-RestMethod -Uri 'https://api.github.com/repos/heycanihavethis/Poison/releases/latest').assets | Where-Object { $_.name -like '*.dll' } | Select-Object -ExpandProperty browser_download_url"') do (
     set pluginUrl=%%i
 )
 
@@ -71,10 +71,10 @@ if "%pluginUrl%"=="" (
 )
 
 color 0e
-curl -L "%pluginUrl%" -o %gamePath%/BepInEx/plugins/"Seralyth Menu.dll"
+curl -L "%pluginUrl%" -o %gamePath%/BepInEx/plugins/"Poison Menu.dll"
 
 cls
-title Seralyth Menu Installer // [##########] Finished
+title Poison Menu Installer // [##########] Finished
 echo Congratulations, you now have the menu!
 
 del "BPNX54234.zip"

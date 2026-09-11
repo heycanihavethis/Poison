@@ -1,9 +1,9 @@
 /*
- * Seralyth Menu  Managers/NotificationManager.cs
+ * Poison Menu  Managers/NotificationManager.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
  */
 
 using GorillaLocomotion;
-using Seralyth.Classes.Menu;
-using Seralyth.Extensions;
-using Seralyth.Menu;
+using Poison.Classes.Menu;
+using Poison.Extensions;
+using Poison.Menu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,9 +30,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static Seralyth.Menu.Main;
+using static Poison.Menu.Main;
 
-namespace Seralyth.Managers
+namespace Poison.Managers
 {
     public class NotificationManager : MonoBehaviour
     {
@@ -80,7 +80,7 @@ namespace Seralyth.Managers
         {
             mainCamera = Camera.main.gameObject;
 
-            GameObject canvasParent = new GameObject("Seralyth_NotificationParent");
+            GameObject canvasParent = new GameObject("Poison_NotificationParent");
             canvasParent.transform.position = mainCamera.transform.position;
 
             canvas = new GameObject("Canvas");

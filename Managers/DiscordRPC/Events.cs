@@ -1,6 +1,6 @@
-﻿using Seralyth.Managers.DiscordRPC.Message;
+﻿using Poison.Managers.DiscordRPC.Message;
 
-namespace Seralyth.Managers.DiscordRPC.Events
+namespace Poison.Managers.DiscordRPC.Events
 {
     /// <summary>
     /// Called when the Discord Client is ready to send and receive messages.

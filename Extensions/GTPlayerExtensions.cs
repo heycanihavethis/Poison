@@ -1,5 +1,5 @@
 /*
- * Poison Menu  Mods/CustomMaps/SceneMap.cs
+ * Poison Menu  Extensions/GTPlayerExtensions.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
  * Copyright (C) 2026  Poison Software
@@ -19,18 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+using GorillaLocomotion;
 
-namespace Poison.Mods.CustomMaps
+namespace Poison.Extensions
 {
-    public class SceneMap
+    public static class GTPlayerExtensions
     {
-        public long MapID { get; }
-        public string SceneName { get; }
-
-        public SceneMap(long mapID, string sceneName)
+        public static void SetHoverAllowed(this GTPlayer player, bool allowed, bool force = false)
         {
-            MapID = mapID;
-            SceneName = sceneName;
+            player.isHoverAllowed = allowed;
         }
     }
 }

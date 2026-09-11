@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Extensions/SlingshotExtensions.cs
+ * Poison Menu  Extensions/SlingshotExtensions.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 
 using UnityEngine;
 
-namespace Seralyth.Extensions
+namespace Poison.Extensions
 {
     public static class SlingshotExtensions
     {

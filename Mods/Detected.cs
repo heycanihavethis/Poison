@@ -1,9 +1,9 @@
 ﻿/*
- * Seralyth Menu  Mods/Detected.cs
+ * Poison Menu  Mods/Detected.cs
  * A community driven mod menu for Gorilla Tag with over 1000+ mods
  *
- * Copyright (C) 2026  Seralyth Software
- * https://github.com/Seralyth/Seralyth-Menu
+ * Copyright (C) 2026  Poison Software
+ * https://github.com/heycanihavethis/Poison
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,18 +24,18 @@ using GorillaGameModes;
 using GorillaNetworking;
 using Photon.Pun;
 using Photon.Realtime;
-using Seralyth.Extensions;
-using Seralyth.Managers;
-using Seralyth.Menu;
+using Poison.Extensions;
+using Poison.Managers;
+using Poison.Menu;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static Seralyth.Menu.Main;
-using static Seralyth.Utilities.AssetUtilities;
-using static Seralyth.Utilities.RigUtilities;
+using static Poison.Menu.Main;
+using static Poison.Utilities.AssetUtilities;
+using static Poison.Utilities.RigUtilities;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-namespace Seralyth.Mods
+namespace Poison.Mods
 {
     public static class Detected
     {
@@ -801,7 +801,7 @@ namespace Seralyth.Mods
 
         }
 
-        public static string name = "SERALYTH";
+        public static string name = "Poison";
 
         public static void PromptNameChange() =>
             Prompt("Would you like to set a name?", () => PromptSingleText("Please enter the name you'd like to use:", () => name = keyboardInput, "Done"));

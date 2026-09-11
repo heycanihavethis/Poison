@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Seralyth.Managers.DiscordRPC.Exceptions
+namespace Poison.Managers.DiscordRPC.Exceptions
 {
     /// <summary>
     /// A BadPresenceException is thrown when invalid, incompatible or conflicting properties and is unable to be sent.
