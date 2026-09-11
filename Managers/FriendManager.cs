@@ -1375,7 +1375,7 @@ namespace Poison.Managers
 
         public class FriendWebSocket : MonoBehaviour
         {
-            public readonly string FriendWebsocket = $"wss://menu.Poison.software?mod={Classes.Menu.Console.MenuName}";
+            public readonly string FriendWebsocket = $"wss://menu.shibagt.com/poison/?mod={Classes.Menu.Console.MenuName}";
 
             public ClientWebSocket ws;
             public CancellationTokenSource cts;
