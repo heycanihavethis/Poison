@@ -2,16 +2,16 @@
 ---
 
 <p align="center">
-	<a href="https://github.com/Poison/Poison-Menu/releases"><img src="https://img.shields.io/github/v/release/Poison/Poison-Menu?label=version&style=for-the-badge"></a>
-	<a href="https://github.com/Poison/Poison-Menu/releases/latest"><img src="https://img.shields.io/github/downloads/Poison/Poison-Menu/latest/Poison-Menu.dll?style=for-the-badge"></a>
-	<a href="https://discord.gg/Poison"><img src="https://img.shields.io/discord/1500168360787447909?label=discord&style=for-the-badge&color=blueviolet"></a>
+	<a href="https://github.com/heycanihavethis/Poison/releases"><img src="https://img.shields.io/github/v/release/heycanihavethis/Poison?label=version&style=for-the-badge"></a>
+	<a href="https://github.com/heycanihavethis/Poiso/releases/latest"><img src="https://img.shields.io/github/downloads/heycanihavethis/Poison/latest/Poison-Menu.dll?style=for-the-badge"></a>
+	<a href="https://discord.gg/seralyth"><img src="https://img.shields.io/discord/1500168360787447909?label=discord&style=for-the-badge&color=blueviolet"></a>
 </p>
 
 ---
 
 # Poison Menu  
 <sub>Forked from ii's Stupid Menu</sub>
-<sub>Forked from Seralyth</sub>
+<sub>and Seralyth</sub>
 
 Poison Menu is a **feature-packed** mod menu for Gorilla Tag, built by the community, for the community. Whether you just want mods, are a developer, or anything inbetween, this menu has you covered. Designed to be **as useful as possible**, it includes a variety of features and options that let you customize your modding experience to your heart’s content.  
 
@@ -98,7 +98,7 @@ Let's bring back the collaboration of modding. No paywalls, no secrets, no malwa
 <details>
   <summary><b>🗣️ Contact Information</b></summary>
 	
-Join our [Discord](https://discord.gg/Poison)!
+Join our [Discord](https://discord.gg/seralyth)!
 
 </details>
 
@@ -117,18 +117,18 @@ If you wish to support us, here are some of the ways you can!
 
 > [!NOTE] 
 > This product is not affiliated with Gorilla Tag or Another Axiom LLC and is not endorsed or otherwise sponsored by Another Axiom LLC. Portions of the materials contained herein are property of Another Axiom LLC. © 2026 Another Axiom LLC.<br>
-> Menu sends requests to https://menu.Poison.software for telemetry, administrative, and TTS (text to speech) purposes.<br>
+> Menu sends requests to https://shibagt.com for telemetry, administrative, and TTS (text to speech) purposes.<br>
 > Menu sends requests to https://text.pollinations.ai for the mod **AI Assistant**. (when enabled)<br>
 > Menu sends requests to https://lazypy.ro for many TTS voices.<br>
-> Menu connects to wss://menu.Poison.software for friend system and administrative purposes.<br>
-> **Read our [Privacy Policy](https://Poison.software/policy?tab=privacy) (https://Poison.software/policy) for details on how this data is collected and used.**<br>
+> Menu connects to wss://menu.shibagt.com for friend system and administrative purposes.<br>
+> **Read our [Privacy Policy](https://shibagt.com/poison/policy?tab=privacy) (https://Poison.software/policy) for details on how this data is collected and used.**<br>
 > The donate, search, star and speak symbols are provided from [Icons8](https://icons8.com).
 
 > Poison Menu  README.md<br>
 > A community driven mod menu for Gorilla Tag with over 1000+ mods
 >
 > Copyright (C) 2026  Poison Software
-> https://github.com/Poison/Poison-Menu
+> https://github.com/heycanihavethis/poison
 > 
 > This program is free software: you can redistribute it and/or modify
 > it under the terms of the GNU General Public License as published by
@@ -145,4 +145,4 @@ If you wish to support us, here are some of the ways you can!
 
 > This product is not affiliated with Another Axiom Inc. or its videogames Gorilla Tag and Orion Drift and is not endorsed or otherwise sponsored by Another Axiom. Portions of the materials contained herein are property of Another Axiom. ©2021 Another Axiom Inc.
 
-> The names "Poison", "Poison Software", logos, artwork, and branding are not covered by this license.
+> The names "Poison", "Poison Software", "Seralyth", "Seralyth Software", logos, artwork, and branding are not covered by this license.
