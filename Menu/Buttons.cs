@@ -74,8 +74,7 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Detected Mods", overlapText = "<color=red>Detected Mods</color>", method = Detected.EnterDetectedTab, isTogglable = false, toolTip = "Opens the detected mods."},
 
                 new ButtonInfo { buttonText = "Achievements", method = AchievementManager.EnterAchievementTab, isTogglable = false, toolTip = "Opens the achievements page.", legal = true},
-                new ButtonInfo { buttonText = "Credits", method =() => CurrentCategoryName = "Credits", isTogglable = false, toolTip = "Opens the credits page.", legal = true},
-                new ButtonInfo { buttonText = "no", method =() => Settings.LogGamemode(), isTogglable = false, toolTip = "d.", legal = true}
+                new ButtonInfo { buttonText = "Credits", method =() => CurrentCategoryName = "Credits", isTogglable = false, toolTip = "Opens the credits page.", legal = true}            
             },
 
             new[] { // Settings [1]
