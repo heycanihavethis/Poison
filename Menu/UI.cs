@@ -561,8 +561,18 @@ namespace Poison.Menu
             fontChecked = true;
             try
             {
-                Font f = Font.CreateDynamicFontFromOSFont(new[] { "Verdana", "Tahoma", "Segoe UI", "Arial" }, 15);
-                if (f != null) uiFont = f;
+                // CreateDynamicFontFromOSFont logs a warning for every requested name that is not
+                // installed, so only pass names that actually exist on this system.
+                HashSet<string> installed = new HashSet<string>(Font.GetOSInstalledFontNames(), StringComparer.OrdinalIgnoreCase);
+                string[] candidates = { "Verdana", "Tahoma", "Segoe UI", "Arial", "DejaVu Sans", "Liberation Sans", "Noto Sans" };
+                List<string> present = new List<string>();
+                foreach (string name in candidates)
+                    if (installed.Contains(name)) present.Add(name);
+                if (present.Count > 0)
+                {
+                    Font f = Font.CreateDynamicFontFromOSFont(present.ToArray(), 15);
+                    if (f != null) uiFont = f;
+                }
             }
             catch { }
             return uiFont;

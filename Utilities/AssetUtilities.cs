@@ -20,6 +20,7 @@
  */
 
 using Poison.Managers;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -37,23 +38,31 @@ namespace Poison.Utilities
         private static AssetBundle assetBundle;
         private static void LoadAssetBundle()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.Poisonmenu");
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            Stream stream = assembly.GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.Poisonmenu");
+            // Manifest resource names are case-sensitive; the bundle file was renamed to lowercase.
+            if (stream == null)
+            {
+                string match = Array.Find(assembly.GetManifestResourceNames(),
+                    name => name.EndsWith(".poisonmenu", StringComparison.OrdinalIgnoreCase));
+                if (match != null) stream = assembly.GetManifestResourceStream(match);
+            }
             if (stream != null)
                 assetBundle = AssetBundle.LoadFromStream(stream);
             else
-                LogManager.LogError("Failed to load assetbundle");
+                LogManager.LogError("Failed to load assetbundle: embedded resource not found");
         }
 
-        public static T LoadObject<T>(string assetName) where T : Object
+        public static T LoadObject<T>(string assetName) where T : UnityEngine.Object
         {
             if (assetBundle == null)
                 LoadAssetBundle();
 
-            T gameObject = Object.Instantiate(assetBundle.LoadAsset<T>(assetName));
+            T gameObject = UnityEngine.Object.Instantiate(assetBundle.LoadAsset<T>(assetName));
             return gameObject;
         }
 
-        public static T LoadAsset<T>(string assetName) where T : Object
+        public static T LoadAsset<T>(string assetName) where T : UnityEngine.Object
         {
             if (assetBundle == null)
                 LoadAssetBundle();

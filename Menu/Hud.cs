@@ -300,12 +300,16 @@ namespace Poison.Menu
             SetOverlay(root.transform);
         }
 
+        // TMP glyphs are signed distance fields: a plain UI/Overlay material blits the raw SDF
+        // atlas as pixels (blocky text). TMP texts must keep the font's own SDF material.
         void SetOverlay(Transform target)
         {
-            Graphic graphic = target.GetComponent<Graphic>();
-            if (graphic != null) graphic.material = overlayMaterial;
             TMP_Text text = target.GetComponent<TMP_Text>();
-            if (text != null) text.fontSharedMaterial = overlayMaterial;
+            if (text == null)
+            {
+                Graphic graphic = target.GetComponent<Graphic>();
+                if (graphic != null) graphic.material = overlayMaterial;
+            }
             for (int i = 0; i < target.childCount; i++) SetOverlay(target.GetChild(i));
         }
 

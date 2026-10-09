@@ -54,7 +54,16 @@ namespace Poison.Menu
         private void SetupClassic()
         {
             if (labelStyle != null) return;
-            try { monoFont = Font.CreateDynamicFontFromOSFont(new[] { "Consolas", "Lucida Console", "Courier New" }, 12); }
+            try
+            {
+                HashSet<string> installed = new HashSet<string>(Font.GetOSInstalledFontNames(), StringComparer.OrdinalIgnoreCase);
+                string[] candidates = { "Consolas", "Lucida Console", "Courier New", "DejaVu Sans Mono", "Liberation Mono", "Noto Sans Mono", "Monospace" };
+                List<string> present = new List<string>();
+                foreach (string name in candidates)
+                    if (installed.Contains(name)) present.Add(name);
+                if (present.Count > 0)
+                    monoFont = Font.CreateDynamicFontFromOSFont(present.ToArray(), 12);
+            }
             catch { }
             labelStyle = new GUIStyle(textStyle) { fontSize = 12, font = monoFont != null ? monoFont : textStyle.font };
             headingStyle = new GUIStyle(labelStyle) { fontSize = 19, alignment = TextAnchor.UpperCenter };
