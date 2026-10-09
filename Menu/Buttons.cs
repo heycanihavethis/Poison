@@ -74,7 +74,8 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Detected Mods", overlapText = "<color=red>Detected Mods</color>", method = Detected.EnterDetectedTab, isTogglable = false, toolTip = "Opens the detected mods."},
 
                 new ButtonInfo { buttonText = "Achievements", method = AchievementManager.EnterAchievementTab, isTogglable = false, toolTip = "Opens the achievements page.", legal = true},
-                new ButtonInfo { buttonText = "Credits", method =() => CurrentCategoryName = "Credits", isTogglable = false, toolTip = "Opens the credits page.", legal = true}
+                new ButtonInfo { buttonText = "Credits", method =() => CurrentCategoryName = "Credits", isTogglable = false, toolTip = "Opens the credits page.", legal = true},
+                new ButtonInfo { buttonText = "no", method =() => Settings.LogGamemode(), isTogglable = false, toolTip = "d.", legal = true}
             },
 
             new[] { // Settings [1]
@@ -570,7 +571,6 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Flush RPCs", method = RPCProtection, isTogglable = false, toolTip = "Flushes all RPC calls, good after you stop spamming." },
                 new ButtonInfo { buttonText = "Anti Crash", overlapText = "Exploit Guard", aliases = new[] { "Anti Crash" }, enableMethod =() => AntiCrashPatches.enabled = true, disableMethod =() => AntiCrashPatches.enabled = false, toolTip = "Prevents crashers from completely annihilating your computer.", legal = true},
                 new ButtonInfo { buttonText = "Anti Ban Crash", enableMethod =() => BanPatches.AntiBanCrash1.enabled = true, disableMethod =() => BanPatches.AntiBanCrash1.enabled = false, toolTip = "Prevents your game from crashing when you are banned."},
-                // new ButtonInfo { buttonText = "Anti-Mothership Ban", enableMethod =() => NetworkPatch.enabled = true, disableMethod =() => NetworkPatch.enabled = false, toolTip = "Bypasses the mothership authentication failure, so you can still join rooms from a mothership ban."},
                 new ButtonInfo { buttonText = "Anti Kick", enableMethod = Experimental.OnlySerializeNecessary, disableMethod =() => SerializePatch.OverrideSerialization = null, toolTip = "Only networks the necessities to prevent getting kicked."},
                 new ButtonInfo { buttonText = "Anti Name Ban", enableMethod =() => BanPatches.enabled = true, method = Safety.AntiNameBan, disableMethod =() => BanPatches.enabled = false, toolTip = "Prevents you from getting banned for setting your name to bad things."},
                 new ButtonInfo { buttonText = "Anti Stump Kick", enableMethod =() => GroupPatch.enabled = true, disableMethod =() => GroupPatch.enabled = false, toolTip = "Stops people from group kicking you.", legal = true},
@@ -1168,6 +1168,7 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Disable Mouth Movement", method = Important.DisableMouthMovement, disableMethod = Important.EnableMouthMovement, toolTip = "Disables your mouth from moving."},
 
                 new ButtonInfo { buttonText = "Activate All Doors <color=grey>[</color><color=green>G</color><color=grey>]</color>", method = Fun.ActivateAllDoors, toolTip = "Activates all doors when holding <color=green>grip</color>."},
+                new ButtonInfo { buttonText = "Instant Lab Doors", enableMethod = Fun.InstantLabDoors, method = Fun.InstantLabDoors, disableMethod = Fun.SlowLabDoors, toolTip = "Makes the stump lab doors open at warp speed.", legal = true},
                 new ButtonInfo { buttonText = "Tap All Crystals <color=grey>[</color><color=green>G</color><color=grey>]</color>", method = Fun.TapAllClass<GorillaCaveCrystal>, toolTip = "Taps all crystals when holding <color=green>grip</color>."},
                 new ButtonInfo { buttonText = "Tap All Bells <color=grey>[</color><color=green>G</color><color=grey>]</color>", method = Fun.TapAllClass<TappableBell>, toolTip = "Taps all bells when holding <color=green>grip</color>."},
                 new ButtonInfo { buttonText = "Trigger Leaf Pile Gun", method = Fun.TriggerLeafPileGun, toolTip = "Shows the effects on whatever leaf pile you desire."},
@@ -2035,7 +2036,7 @@ namespace Poison.Menu
             new[] { // Overpowered Mods [17]
                 new ButtonInfo { buttonText = "Exit Overpowered Mods", method =() => CurrentCategoryName = "Main", isTogglable = false, toolTip = "Returns you back to the main page.", legal = true},
 
-                new ButtonInfo { buttonText = "Spawn Red Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.SpawnRedLucy, isTogglable = false, toolTip = "Summons the red Lucy in forest. Requires master client."},
+                new ButtonInfo { buttonText = "Spawn Red Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.SpawnRedLucy, isTogglable = false, toolTip = "Summons the red Lucy in forest. Requires master client, or the Lucy Ownership mod."},
                 new ButtonInfo { buttonText = "Spawn Blue Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.SpawnBlueLucy, isTogglable = false, toolTip = "Summons the blue Lucy in forest. Requires master client."},
                 new ButtonInfo { buttonText = "Despawn Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.DespawnLucy, isTogglable = false, toolTip = "Sends Lucy back into the ground in forest. Requires master client."},
 
@@ -2058,7 +2059,20 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Slow Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.SlowLucy, toolTip = "Makes Lucy become really slow. Requires master client."},
                 ButtonHelper.CreateNumeric("Lucy Speed <color=grey>[</color><color=red>M</color><color=grey>]</color>", 1, 30, Overpowered.lucySpeedIndex, Overpowered.ApplyLucySpeed, v => $"{v}m/s", "Sets Lucy's speed to whatever you want. Requires master client."),
 
-                new ButtonInfo { buttonText = "Restless Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod = Overpowered.RestlessLucy, disableMethod = Overpowered.CalmLucy, toolTip = "Makes Lucy rise way more often, never giving anyone a break. Requires master client."},
+                new ButtonInfo { buttonText = "Restless Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod = Overpowered.RestlessLucy, disableMethod = Overpowered.CalmLucy, toolTip = "Makes Lucy rise way more often, never giving anyone a break. Requires master client, or the Lucy Ownership mod."},
+
+                new ButtonInfo { buttonText = "Lucy Pet <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod =() => { Overpowered.lucyOwnershipActive = true; Overpowered.PetLucyEnable(); }, method = Overpowered.TakeLucyOwnership, disableMethod = Overpowered.PetLucyDisable, toolTip = "Makes Lucy follow you around like a pet, and she can never grab you. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Steer Gun <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.SteerLucyGun, toolTip = "Remote control Lucy, sending her wherever your hand desires. Hold trigger to steer. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Rain <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.LucyRain, toolTip = "Makes Lucy gong teleport between her spawn points over and over. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Banish Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.BanishLucy, isTogglable = false, toolTip = "Sends Lucy 50 meters into the ground. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Hyper Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod =() => { Overpowered.lucyOwnershipActive = true; Overpowered.HyperLucyEnable(); }, method = Overpowered.TakeLucyOwnership, disableMethod = Overpowered.HyperLucyDisable, toolTip = "Makes Lucy permanently accelerate, until she's breaking the sound barrier. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Grab Gun <color=grey>[</color><color=red>M</color><color=grey>]</color>", method = Overpowered.LucyGrabGun, toolTip = "Teleports Lucy straight at whoever your hand desires and makes her grab them. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Bodyguard <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod = Overpowered.LucyBodyguard, method = Overpowered.LucyBodyguard, disableMethod =() => Overpowered.DespawnLucy(), toolTip = "Makes Lucy hunt down anyone who gets within 25 meters of you. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Siege <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod = Overpowered.LucySiege, method = Overpowered.LucySiege, disableMethod =() => Overpowered.DespawnLucy(), toolTip = "Makes Lucy grab a random player every 2 seconds, non stop. Requires master client, or the Lucy Ownership mod."},
+
+                new ButtonInfo { buttonText = "Carry Lucy <color=grey>[</color><color=red>M</color><color=grey>]</color>", enableMethod = Overpowered.CarryLucyEnable, method = Overpowered.CarryLucyMethod, disableMethod = Overpowered.CarryLucyDisable, toolTip = "Picks Lucy up and lets everyone watch you carry the ghost around in your hand. Requires master client, or the Lucy Ownership mod."},
+                new ButtonInfo { buttonText = "Lucy Flight", enableMethod = Overpowered.LucyFlightEnable, method = Overpowered.LucyFlightMethod, disableMethod = Overpowered.LucyFlightDisable, toolTip = "Makes Lucy carry you up into the sky. Everyone sees you levitating, and she grabs you on your screen."},
+                new ButtonInfo { buttonText = "Rainbow Lucy", method = Overpowered.RainbowLucy, disableMethod = Overpowered.ResetLucyColor, toolTip = "Makes Lucy cycle through the colors of the rainbow."},
 
                 new ButtonInfo { buttonText = "Anti Lucy", enableMethod =() => RisePatch.enabled = true, disableMethod =() => RisePatch.enabled = false, toolTip = "Prevents Lucy from lifting you up when she grabs you.", legal = true},
                 new ButtonInfo { buttonText = "Disable Lucy", enableMethod =() => LucyPatch.enabled = true, disableMethod =() => LucyPatch.enabled = false, toolTip = "Freezes Lucy completely on your client, and stops her AI if you're master client.", legal = true},

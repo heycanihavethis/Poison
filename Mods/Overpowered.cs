@@ -2720,6 +2720,9 @@ namespace Poison.Mods
                     _lurker = lurkerObject != null ? lurkerObject.GetComponent<LurkerGhost>() : GetAllType<LurkerGhost>().FirstOrDefault(ghost => ghost != null && ghost.HasView && ghost.GetView.ViewID != 0);
                 }
 
+                if (lurkerOwnershipActive)
+                    TakeLurkerOwnership();
+
                 return _lurker;
             }
             set => _lurker = value;
@@ -3050,6 +3053,562 @@ namespace Poison.Mods
             hgc.minGrabCooldown = lucyMinGrabCooldown;
             hgc.maxNextTimeToChasePlayer = lucyMaxChaseTime;
             lucyCooldownsSaved = false;
+        }
+
+        public static bool lucyOwnershipActive;
+        public static void TakeLucyOwnership()
+        {
+            // imremoving this for pushing its ud unknown niche ebk method that i dont want ppl having bro yeah
+        }
+
+        public static bool lucyPetActive;
+        public static float lucyOldCatchDistance;
+        public static void PetLucyEnable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (!lucyPetActive)
+                {
+                    lucyPetActive = true;
+                    lucyOldCatchDistance = hgc.catchDistance;
+                }
+                hgc.catchDistance = 0f;
+                hgc.currentState = HalloweenGhostChaser.ChaseState.Chasing;
+                hgc.targetPlayer = NetworkSystem.Instance.LocalPlayer;
+                hgc.followTarget = GorillaTagger.Instance.offlineVRRig.transform;
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void PetLucyDisable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (lucyPetActive)
+                {
+                    hgc.catchDistance = lucyOldCatchDistance;
+                    lucyPetActive = false;
+                }
+                hgc.currentState = HalloweenGhostChaser.ChaseState.Dormant;
+                hgc.targetPlayer = null;
+            }
+        }
+
+        public static void SteerLucyGun()
+        {
+            if (GetGunInput(false))
+            {
+                var GunData = RenderGun();
+                GameObject NewPointer = GunData.NewPointer;
+
+                if (GetGunInput(true))
+                {
+                    HalloweenGhostChaser hgc = Lucy;
+                    if (hgc == null) return;
+                    if (hgc.IsMine)
+                    {
+                        hgc.currentState = HalloweenGhostChaser.ChaseState.Chasing;
+                        hgc.targetPlayer = NetworkSystem.Instance.LocalPlayer;
+                        hgc.followTarget = NewPointer.transform;
+                    }
+                    else NotificationManager.SendNotification(NotMasterClientError);
+                }
+            }
+        }
+
+        public static float lucyRainDelay;
+        public static void LucyRain()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine && hgc.spawnTransforms != null && hgc.spawnTransforms.Length != 0)
+            {
+                if (Time.time > lucyRainDelay)
+                {
+                    lucyRainDelay = Time.time + 0.25f;
+                    hgc.spawnIndex = Random.Range(0, hgc.spawnTransforms.Length);
+                    hgc.timeGongStarted = Time.time;
+                    hgc.currentState = HalloweenGhostChaser.ChaseState.Gong;
+                    hgc.isSummoned = Random.value > 0.5f;
+                }
+            }
+            else if (!hgc.IsMine) NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void BanishLucy()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                hgc.currentState = HalloweenGhostChaser.ChaseState.Dormant;
+                hgc.transform.position = hgc.spawnTransforms[0].position - Vector3.up * 50f;
+                hgc.ghostBody.SetActive(false);
+                hgc.isSummoned = false;
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static bool lucySpeedSaved;
+        public static float lucyOldVelocityStep, lucyOldVelocityTime;
+        public static void HyperLucyEnable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (!lucySpeedSaved)
+                {
+                    lucySpeedSaved = true;
+                    lucyOldVelocityStep = hgc.velocityStep;
+                    lucyOldVelocityTime = hgc.velocityIncreaseTime;
+                }
+                hgc.velocityStep = 10f;
+                hgc.velocityIncreaseTime = 2f;
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void HyperLucyDisable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null || !lucySpeedSaved) return;
+            if (hgc.IsMine)
+            {
+                hgc.velocityStep = lucyOldVelocityStep;
+                hgc.velocityIncreaseTime = lucyOldVelocityTime;
+                lucySpeedSaved = false;
+            }
+        }
+
+        public static float skeletonSummonDelay;
+        public static void SkeletonSummonGun()
+        {
+            if (GetGunInput(false))
+            {
+                var GunData = RenderGun();
+                GameObject NewPointer = GunData.NewPointer;
+
+                if (GetGunInput(true) && Time.time > skeletonSummonDelay)
+                {
+                    skeletonSummonDelay = Time.time + 1f;
+                    foreach (SecondLookSkeleton skeleton in GetAllType<SecondLookSkeleton>())
+                    {
+                        skeleton.tapped = true;
+                        skeleton.spookyGhost.transform.position = NewPointer.transform.position;
+                        skeleton.spookyGhost.transform.rotation = Quaternion.LookRotation(GorillaTagger.Instance.bodyCollider.transform.position - skeleton.spookyGhost.transform.position);
+                        skeleton.currentState = SecondLookSkeleton.GhostState.Unactivated;
+                        skeleton.ChangeState(SecondLookSkeleton.GhostState.Activated);
+                    }
+                }
+            }
+        }
+
+        public static bool skeletonRageSaved;
+        public static float skeletonOldChase, skeletonOldCatch, skeletonOldThrow, skeletonOldSee;
+        public static void SkeletonRage()
+        {
+            SecondLookSkeleton[] skeletons = GetAllType<SecondLookSkeleton>();
+            if (skeletons.Length == 0)
+                return;
+
+            foreach (SecondLookSkeleton skeleton in skeletons)
+            {
+                if (!skeletonRageSaved)
+                {
+                    skeletonRageSaved = true;
+                    skeletonOldChase = skeleton.chaseSpeed;
+                    skeletonOldCatch = skeleton.catchDistance;
+                    skeletonOldThrow = skeleton.throwForce;
+                    skeletonOldSee = skeleton.maxSeeDistance;
+                }
+                skeleton.chaseSpeed = 9f;
+                skeleton.catchDistance = 10f;
+                skeleton.throwForce = 40f;
+                skeleton.maxSeeDistance = 100f;
+            }
+        }
+
+        public static void CalmSkeleton()
+        {
+            SecondLookSkeleton[] skeletons = GetAllType<SecondLookSkeleton>();
+            if (skeletons.Length == 0 || !skeletonRageSaved)
+                return;
+
+            foreach (SecondLookSkeleton skeleton in skeletons)
+            {
+                skeleton.chaseSpeed = skeletonOldChase;
+                skeleton.catchDistance = skeletonOldCatch;
+                skeleton.throwForce = skeletonOldThrow;
+                skeleton.maxSeeDistance = skeletonOldSee;
+            }
+            skeletonRageSaved = false;
+        }
+
+        public static bool skeletonPacifistSaved, skeletonPacifistApplied;
+        public static float skeletonPacifistOldCatch;
+        public static void SkeletonPacifist()
+        {
+            SecondLookSkeleton[] skeletons = GetAllType<SecondLookSkeleton>();
+            if (skeletons.Length == 0)
+                return;
+
+            foreach (SecondLookSkeleton skeleton in skeletons)
+            {
+                if (!skeletonPacifistSaved)
+                {
+                    skeletonPacifistSaved = true;
+                    skeletonPacifistOldCatch = skeleton.catchDistance;
+                }
+                skeleton.catchDistance = 0f;
+                skeletonPacifistApplied = true;
+            }
+        }
+
+        public static void NormalSkeleton()
+        {
+            SecondLookSkeleton[] skeletons = GetAllType<SecondLookSkeleton>();
+            if (skeletons.Length == 0 || !skeletonPacifistApplied)
+                return;
+
+            foreach (SecondLookSkeleton skeleton in skeletons)
+                skeleton.catchDistance = skeletonPacifistOldCatch;
+            skeletonPacifistSaved = false;
+            skeletonPacifistApplied = false;
+        }
+
+        public static void TrickTreatRain()
+        {
+            TrickTreatItem[] items = GetAllType<TrickTreatItem>();
+            if (items.Length == 0)
+                return;
+
+            foreach (TrickTreatItem item in items)
+                item.Randomize();
+        }
+
+        public static bool pumpkinSaved;
+        public static float pumpkinOldUpdate, pumpkinOldRange;
+        public static void PumpkinHypno()
+        {
+            HalloweenWatcherEyes[] eyeses = GetAllType<HalloweenWatcherEyes>();
+            if (eyeses.Length == 0)
+                return;
+
+            foreach (HalloweenWatcherEyes watcher in eyeses)
+            {
+                if (!pumpkinSaved)
+                {
+                    pumpkinSaved = true;
+                    pumpkinOldUpdate = watcher.timeBetweenUpdates;
+                    pumpkinOldRange = watcher.watchRange;
+                }
+                watcher.timeBetweenUpdates = 0.05f;
+                watcher.watchRange = 2000f;
+            }
+        }
+
+        public static void NormalPumpkin()
+        {
+            HalloweenWatcherEyes[] eyeses = GetAllType<HalloweenWatcherEyes>();
+            if (eyeses.Length == 0 || !pumpkinSaved)
+                return;
+
+            foreach (HalloweenWatcherEyes watcher in eyeses)
+            {
+                watcher.timeBetweenUpdates = pumpkinOldUpdate;
+                watcher.watchRange = pumpkinOldRange;
+            }
+            pumpkinSaved = false;
+        }
+
+        public static bool spiderSaved;
+        public static Vector4 spiderOldSpins;
+        public static void SpiderParty()
+        {
+            SpiderDangler[] spiders = GetAllType<SpiderDangler>();
+            if (spiders.Length == 0)
+                return;
+
+            foreach (SpiderDangler spider in spiders)
+            {
+                if (!spiderSaved)
+                {
+                    spiderSaved = true;
+                    spiderOldSpins = spider.spinSpeeds;
+                }
+                spider.spinSpeeds = new Vector4(spiderOldSpins.x * 8f, spiderOldSpins.y * 8f, spiderOldSpins.z * 8f, spiderOldSpins.w * 8f);
+            }
+        }
+
+        public static void NormalSpiders()
+        {
+            SpiderDangler[] spiders = GetAllType<SpiderDangler>();
+            if (spiders.Length == 0 || !spiderSaved)
+                return;
+
+            foreach (SpiderDangler spider in spiders)
+                spider.spinSpeeds = spiderOldSpins;
+            spiderSaved = false;
+        }
+
+        public static void RainbowLucy()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            hgc.ghostMaterial.color = Color.HSVToRGB((Time.time % 2f) / 2f, 1f, 1f);
+        }
+
+        public static void ResetLucyColor()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            hgc.ghostMaterial.color = hgc.isSummoned ? hgc.summonedColor : hgc.defaultColor;
+        }
+
+        public static bool lucyRiseSaved;
+        public static Vector3[] lucyOldSpawnPositions;
+        public static float lucyRiseGunDelay;
+        public static void LucyRiseEnable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (!lucyRiseSaved && hgc.spawnTransforms != null)
+                {
+                    Vector3[] allSpawns = new Vector3[hgc.spawnTransforms.Length];
+                    for (int i = 0; i < hgc.spawnTransforms.Length; i++)
+                        allSpawns[i] = hgc.spawnTransforms[i].position;
+                    lucyOldSpawnPositions = allSpawns;
+                    lucyRiseSaved = true;
+                }
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void LucyRiseGun()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (GetGunInput(false))
+                {
+                    var GunData = RenderGun();
+                    GameObject NewPointer = GunData.NewPointer;
+
+                    if (GetGunInput(true) && hgc.spawnTransforms != null && hgc.spawnTransforms.Length != 0 && Time.time > lucyRiseGunDelay)
+                    {
+                        lucyRiseGunDelay = Time.time + 1.5f;
+                        Vector3 spawnPosition = NewPointer.transform.position - Vector3.up * 2f;
+                        for (int i = 0; i < hgc.spawnTransforms.Length; i++)
+                            hgc.spawnTransforms[i].position = spawnPosition;
+
+                        hgc.currentState = HalloweenGhostChaser.ChaseState.Gong;
+                        hgc.timeGongStarted = Time.time;
+                        hgc.isSummoned = false;
+                    }
+                }
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void LucyRiseDisable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null || !lucyRiseSaved) return;
+            if (hgc.IsMine && hgc.spawnTransforms != null && lucyOldSpawnPositions != null)
+            {
+                for (int i = 0; i < hgc.spawnTransforms.Length && i < lucyOldSpawnPositions.Length; i++)
+                    hgc.spawnTransforms[i].position = lucyOldSpawnPositions[i];
+                lucyRiseSaved = false;
+            }
+        }
+
+        public static bool lucyCarrySaved;
+        public static float lucyOldSpeed;
+        public static void CarryLucyEnable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (!lucyCarrySaved)
+                {
+                    lucyCarrySaved = true;
+                    lucyOldSpeed = hgc.currentSpeed;
+                }
+                hgc.currentSpeed = 0f;
+                hgc.currentState = HalloweenGhostChaser.ChaseState.Chasing;
+                hgc.targetPlayer = NetworkSystem.Instance.LocalPlayer;
+                hgc.followTarget = GorillaTagger.Instance.offlineVRRig.transform;
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static void CarryLucyMethod()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                hgc.transform.position = GorillaTagger.Instance.rightHandTransform.position;
+                hgc.transform.rotation = GorillaTagger.Instance.rightHandTransform.rotation;
+            }
+        }
+
+        public static void CarryLucyDisable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null || !lucyCarrySaved) return;
+            if (hgc.IsMine)
+            {
+                hgc.currentSpeed = lucyOldSpeed;
+                lucyCarrySaved = false;
+                hgc.currentState = HalloweenGhostChaser.ChaseState.Dormant;
+            }
+        }
+
+        public static bool lucyFlightSaved;
+        public static float lucyOldGrabSpeed, lucyOldGrabDuration;
+        public static void LucyFlightEnable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (!lucyFlightSaved)
+            {
+                lucyFlightSaved = true;
+                lucyOldGrabSpeed = hgc.grabSpeed;
+                lucyOldGrabDuration = hgc.grabDuration;
+            }
+            hgc.grabSpeed = 5f;
+            hgc.grabDuration = 99999f;
+            hgc.minGrabCooldown = 0.5f;
+            LucySyncPatch.enabled = true;
+        }
+
+        public static void LucyFlightMethod()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+
+            hgc.grabTime = Time.time;
+            hgc.currentState = HalloweenGhostChaser.ChaseState.Grabbing;
+            hgc.targetPlayer = NetworkSystem.Instance.LocalPlayer;
+            hgc.followTarget = GorillaTagger.Instance.offlineVRRig.transform;
+        }
+
+        public static void LucyFlightDisable()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null || !lucyFlightSaved) return;
+
+            hgc.grabSpeed = lucyOldGrabSpeed;
+            hgc.grabDuration = lucyOldGrabDuration;
+            lucyFlightSaved = false;
+            LucySyncPatch.enabled = false;
+
+            hgc.targetPlayer = null;
+            hgc.currentState = HalloweenGhostChaser.ChaseState.Dormant;
+        }
+
+        public static float lucyGrabDelay;
+        public static void LucyGrabGun()
+        {
+            if (GetGunInput(false))
+            {
+                var GunData = RenderGun();
+                RaycastHit Ray = GunData.Ray;
+
+                if (gunLocked && lockTarget != null && Time.time > lucyGrabDelay)
+                {
+                    lucyGrabDelay = Time.time + 1f;
+                    HalloweenGhostChaser hgc = Lucy;
+                    if (hgc == null) return;
+                    if (hgc.IsMine)
+                    {
+                        hgc.currentState = HalloweenGhostChaser.ChaseState.Grabbing;
+                        hgc.grabTime = Time.time;
+                        hgc.targetPlayer = lockTarget.GetPlayer();
+                        hgc.followTarget = lockTarget.transform;
+                    }
+                    else NotificationManager.SendNotification(NotMasterClientError);
+                }
+
+                if (GetGunInput(true))
+                {
+                    VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
+                    if (gunTarget && !gunTarget.IsLocal())
+                    {
+                        gunLocked = true;
+                        lockTarget = gunTarget;
+                    }
+                }
+            }
+            else
+            {
+                if (gunLocked)
+                    gunLocked = false;
+            }
+        }
+
+        public static float lucyBodyguardDelay;
+        public static void LucyBodyguard()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (Time.time > lucyBodyguardDelay)
+                {
+                    lucyBodyguardDelay = Time.time + 1f;
+                    foreach (VRRig rig in VRRigExtensions.ActiveRigs)
+                    {
+                        if (!rig.IsLocal() && hgc.targetPlayer != rig.GetPlayer() && (rig.transform.position - VRRig.LocalRig.transform.position).magnitude < 25f)
+                        {
+                            hgc.currentState = HalloweenGhostChaser.ChaseState.Chasing;
+                            hgc.targetPlayer = rig.GetPlayer();
+                            hgc.followTarget = rig.transform;
+                            break;
+                        }
+                    }
+                }
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static float lucySiegeDelay;
+        public static void LucySiege()
+        {
+            HalloweenGhostChaser hgc = Lucy;
+            if (hgc == null) return;
+            if (hgc.IsMine)
+            {
+                if (Time.time > lucySiegeDelay)
+                {
+                    lucySiegeDelay = Time.time;
+                    hgc.currentState = HalloweenGhostChaser.ChaseState.Grabbing;
+                    hgc.grabTime = Time.time;
+                    hgc.targetPlayer = GetRandomPlayer(false);
+                }
+            }
+            else NotificationManager.SendNotification(NotMasterClientError);
+        }
+
+        public static bool lurkerOwnershipActive;
+        public static void TakeLurkerOwnership()
+        {
+            if (_lurker == null) return;
+            if (!_lurker.IsMine)
+            {
+                _lurker.ControllerActorNr = NetworkSystem.Instance.LocalPlayer.ActorNumber;
+                _lurker.OwnerActorNr = NetworkSystem.Instance.LocalPlayer.ActorNumber;
+            }
         }
 
         public static void SpawnLurker()

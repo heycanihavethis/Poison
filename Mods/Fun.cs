@@ -1226,6 +1226,41 @@ namespace Poison.Mods
             }
         }
 
+        public static bool labDoorsSaved;
+        public static float labOldDoorSpeed, labOldSingleDoorSpeed;
+        public static void InstantLabDoors()
+        {
+            GhostLab[] labs = GetAllType<GhostLab>();
+            if (labs.Length == 0)
+                return;
+
+            foreach (GhostLab lab in labs)
+            {
+                if (!labDoorsSaved)
+                {
+                    labDoorsSaved = true;
+                    labOldDoorSpeed = lab.doorMoveSpeed;
+                    labOldSingleDoorSpeed = lab.singleDoorMoveSpeed;
+                }
+                lab.doorMoveSpeed = 99f;
+                lab.singleDoorMoveSpeed = 99f;
+            }
+        }
+
+        public static void SlowLabDoors()
+        {
+            GhostLab[] labs = GetAllType<GhostLab>();
+            if (labs.Length == 0 || !labDoorsSaved)
+                return;
+
+            foreach (GhostLab lab in labs)
+            {
+                lab.doorMoveSpeed = labOldDoorSpeed;
+                lab.singleDoorMoveSpeed = labOldSingleDoorSpeed;
+            }
+            labDoorsSaved = false;
+        }
+
         private static float hitDelay;
         public static void AutoHitMoleType(bool isHazard)
         {

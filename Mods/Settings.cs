@@ -50,11 +50,20 @@ using static Poison.Utilities.RigUtilities;
 using Console = Poison.Classes.Menu.Console;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using UnityEngine;
 
 namespace Poison.Mods
 {
     public static class Settings
     {
+        public static void LogGamemode()
+        {
+            if (PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gameMode"))
+                UnityEngine.Debug.Log("gameMode: " + PhotonNetwork.CurrentRoom.CustomProperties["gameMode"]);
+            else
+                UnityEngine.Debug.Log(" Not in room or no gameMode property");
+
+        }
         public static void Search() // This took me like 4 hours
         {
             if (Hud.InUse)
