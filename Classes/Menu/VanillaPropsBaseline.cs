@@ -34,6 +34,14 @@ namespace Poison.Classes.Menu
     {
         private const string FileName = "VanillaProps.json";
         private static string FilePath => Path.Combine(PluginInfo.BaseDirectory, FileName);
+        private static readonly string[] DefaultKeys =
+        {
+            "didtutorial",
+            "platform",
+            "mothershipid",
+            "gtfcexpirationtime"
+        };
+
         private static HashSet<string> _vanillaKeys = new HashSet<string>();
         public static bool IsLoaded => _vanillaKeys.Count > 0;
 
@@ -72,17 +80,27 @@ namespace Poison.Classes.Menu
         {
             try
             {
-                if (!File.Exists(FilePath)) return false;
-                var keys = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(FilePath));
-                if (keys == null) return false;
-                _vanillaKeys = new HashSet<string>(keys);
-                LogManager.Log($"Loaded {_vanillaKeys.Count} vanilla custom property keys from {FilePath}.");
+                if (File.Exists(FilePath))
+                {
+                    var keys = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(FilePath));
+                    if (keys != null && keys.Count > 0)
+                    {
+                        _vanillaKeys = new HashSet<string>(DefaultKeys);
+                        _vanillaKeys.UnionWith(keys);
+                        LogManager.Log($"Loaded {_vanillaKeys.Count} vanilla custom property keys (defaults + {FilePath}).");
+                        return true;
+                    }
+                }
+
+                _vanillaKeys = new HashSet<string>(DefaultKeys);
+                LogManager.Log($"Loaded {_vanillaKeys.Count} default vanilla custom property keys.");
                 return true;
             }
             catch (System.Exception e)
             {
                 LogManager.LogError($"Failed to load vanilla props baseline: {e.Message}");
-                return false;
+                _vanillaKeys = new HashSet<string>(DefaultKeys);
+                return true;
             }
         }
 
@@ -91,7 +109,7 @@ namespace Poison.Classes.Menu
             if (_vanillaKeys.Count == 0 || props == null) yield break;
             foreach (DictionaryEntry entry in props)
             {
-                string key = (entry.Key?.ToString() ?? "").ToLowerInvariant();
+                string key = (entry.Key?.ToString() ?? "").ToLowerInvariant().Trim();
                 if (string.IsNullOrEmpty(key)) continue;
                 if (!_vanillaKeys.Contains(key))
                     yield return key;
