@@ -35,9 +35,14 @@ namespace Poison.Utilities
     public class AssetUtilities
     {
         private static AssetBundle assetBundle;
+        private static bool bundleLoadAttempted;
         private static void LoadAssetBundle()
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.Poisonmenu");
+            if (bundleLoadAttempted)
+                return;
+            bundleLoadAttempted = true;
+
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"{PluginInfo.ClientResourcePath}.poisonmenu");
             if (stream != null)
                 assetBundle = AssetBundle.LoadFromStream(stream);
             else
@@ -48,6 +53,8 @@ namespace Poison.Utilities
         {
             if (assetBundle == null)
                 LoadAssetBundle();
+            if (assetBundle == null)
+                return null;
 
             T gameObject = Object.Instantiate(assetBundle.LoadAsset<T>(assetName));
             return gameObject;
@@ -58,10 +65,7 @@ namespace Poison.Utilities
             if (assetBundle == null)
                 LoadAssetBundle();
             if (assetBundle == null)
-            {
-                LogManager.LogError($"AssetBundle is null; cannot load asset '{assetName}'.");
                 return null;
-            }
 
             T gameObject = assetBundle.LoadAsset(assetName) as T;
             return gameObject;
