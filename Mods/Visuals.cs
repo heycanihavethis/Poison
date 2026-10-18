@@ -2418,7 +2418,7 @@ namespace Poison.Mods
             { "GorillaWatch", "Gorilla Watch" },
             { "InfoWatch", "Gorilla Info Watch" },
             { "BananaPhone", "Banana Phone" },
-            { "Vivid", "Vivid" }
+            { "Vivid", "Vivid" },
             { "RGBA", "Custom Cosmetics" },
             { "cheese is gouda", "Whos Icheating" },
             { "shirtversion", "Gorilla Shirts" },
