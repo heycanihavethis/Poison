@@ -87,7 +87,7 @@ namespace Poison.Menu
             IsSteam = PlayFabAuthenticator.instance.platform;
 
             InitializeFonts();
-            activeFont = AgencyFB;
+            if (AgencyFB != null) activeFont = AgencyFB;
 
             //if (Plugin.FirstLaunch)
             //    Prompt("It seems like this is your first time using the menu. Would you like to watch a quick tutorial to get to know how to use it?", Settings.ShowTutorial);
@@ -5572,16 +5572,16 @@ namespace Poison.Menu
 
         private static void OnMasterClientSwitch(NetPlayer masterClient)
         {
+            bool isMaster = PhotonNetwork.IsMasterClient;
+            Buttons.GetIndex("MasterLabel").overlapText = isMaster
+                ? "You are master client."
+                : "You are not master client.";
+
             if (disableMasterClientNotifications)
                 return;
 
-            if (NetworkSystem.Instance.IsMasterClient)
-            {
-                Buttons.GetIndex("MasterLabel").overlapText = "You are master client.";
+            if (isMaster)
                 NotificationManager.SendNotification("<color=grey>[</color><color=purple>MASTER</color><color=grey>]</color> You are now master client.");
-            }
-            else
-                Buttons.GetIndex("MasterLabel").overlapText = "You are not master client.";
         }
 
         private static void OnPlayerJoin(NetPlayer Player)

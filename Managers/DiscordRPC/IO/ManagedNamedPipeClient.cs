@@ -129,7 +129,15 @@ namespace Poison.Managers.DiscordRPC.IO
                 //Something happened, try again
                 //TODO: Log the failure condition
                 Logger.Error("Failed connection to {0}. {1}", pipename, e.Message);
-                Close();
+                try
+                {
+                    lock (l_stream)
+                    {
+                        _stream?.Dispose();
+                        _stream = null;
+                    }
+                }
+                catch (Exception) { }
             }
 
             Logger.Trace("Done. Result: {0}", _isClosed);

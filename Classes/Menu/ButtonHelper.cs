@@ -63,6 +63,11 @@ namespace Poison.Classes.Menu
                     int idx = Array.IndexOf(names, s);
                     return idx >= 0 ? idx : 0;
                 }
+                if (button.value is long l)
+                {
+                    int il = (int)l;
+                    return il >= 0 && il < names.Length ? il : 0;
+                }
                 if (button.value is int i && i >= 0 && i < names.Length)
                     return i;
 

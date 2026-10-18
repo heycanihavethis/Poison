@@ -226,6 +226,8 @@ namespace Poison.Classes.Menu
                 if (request.result != UnityWebRequest.Result.Success)
                 {
                     Console.Log($"Failed to load server data:\nError: {request.error}\nResult: {request.result}\nResponse Code: {request.responseCode}\nBody (if any): {request.downloadHandler?.text}");
+                    CustomBoardManager.MenuStatusText = "Offline (server unreachable)";
+                    CustomBoardManager.motdTextDirty = true;
                     yield break;
                 }
 
@@ -279,6 +281,9 @@ namespace Poison.Classes.Menu
                         shownPrompt = true;
                     }
                 }
+
+                CustomBoardManager.MenuStatusText = OutdatedVersion ? "Update available" : "Up to date";
+                CustomBoardManager.motdTextDirty = true;
 
                 string minConsoleVersion = (string)data["min-console-version"];
                 if (VersionToNumber(Console.ConsoleVersion) >= VersionToNumber(minConsoleVersion))

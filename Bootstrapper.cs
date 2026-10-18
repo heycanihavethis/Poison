@@ -77,6 +77,7 @@ namespace Poison
             if (File.Exists($"{PluginInfo.BaseDirectory}/Poison_DisableTelemetry.txt"))
                 ServerData.DisableTelemetry = true;
             GorillaTagger.OnPlayerSpawned(LoadMenu);
+            try { Classes.Menu.VanillaPropsBaseline.Load(); } catch { }
         }
         private static void LoadMenu()
         {

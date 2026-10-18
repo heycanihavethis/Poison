@@ -418,7 +418,7 @@ namespace Poison.Menu
             };
             panel.baseWidth = DefaultWidth(kind);
             panel.baseHeight = DefaultHeight(kind);
-            panel.rect = new Rect(260 + (cascade % 5) * 26, 54 + (cascade % 7) * 22, panel.baseWidth, panel.height);
+            panel.rect = new Rect(260 + (cascade % 5) * 80, 54 + (cascade % 7) * 72, panel.baseWidth, panel.height);
             panel.appear = 0f;
             cascade++;
             if (kind == PanelLauncher) panel.rect.position = new Vector2(24, 60);
@@ -561,7 +561,7 @@ namespace Poison.Menu
             fontChecked = true;
             try
             {
-                Font f = Font.CreateDynamicFontFromOSFont(new[] { "Verdana", "Tahoma", "Segoe UI", "Arial" }, 15);
+                Font f = Font.CreateDynamicFontFromOSFont(new[] { "Verdana", "Tahoma", "Segoe UI", "Arial", "DejaVu Sans", "Liberation Sans", "Noto Sans" }, 15);
                 if (f != null) uiFont = f;
             }
             catch { }
@@ -674,7 +674,7 @@ namespace Poison.Menu
             UpdatePanelInteraction(panels, width, height);
             DrawGrid(width, height);
             bool closedOne = false;
-            for (int i = panels.Count - 1; i >= 0; i--)
+            for (int i = 0; i < panels.Count; i++)
             {
                 Panel deck = panels[i];
                 if (!deck.open && !deck.closing) continue;

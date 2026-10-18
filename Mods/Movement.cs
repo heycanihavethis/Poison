@@ -291,7 +291,7 @@ namespace Poison.Mods
         public static readonly float[] SpeedBoostAmounts = { 2f, 7.5f, 8f, 9f, 200f };
         public static readonly float[] SpeedBoostMultipliers = { 0.5f, 1.1f, 1.5f, 2f, 10f };
         public static readonly string[] SpeedBoostNames = { "Slow", "Normal", "Middle", "Fast", "Ultra Fast" };
-        public static void ApplySpeedBoostAmount(int index) { jspeed = SpeedBoostAmounts[index]; jmulti = SpeedBoostMultipliers[index]; }
+        public static void ApplySpeedBoostAmount(int index) { jspeed = SpeedBoostAmounts[index]; jmulti = SpeedBoostMultipliers[index]; speedboostCycle = index; }
 
         public static void PlatformSpam()
         {
@@ -333,7 +333,7 @@ namespace Poison.Mods
 
         public static readonly float[] FlySpeedAmounts = { 5f, 10f, 30f, 60f, 0.5f };
         public static readonly string[] FlySpeedNames = { "Slow", "Normal", "Fast", "Extra Fast", "Extra Slow" };
-        public static void ApplyFlySpeed(int index) => FlySpeed = FlySpeedAmounts[index];
+        public static void ApplyFlySpeed(int index) { FlySpeed = FlySpeedAmounts[index]; flySpeedCycle = index; }
 
         public static int playspaceAbuseIndex;
         public static readonly float[] PlayspaceAbuseAmounts = { 0.004f, 0.01f, 0.1f, 0.001f, 0.002f };
@@ -342,7 +342,7 @@ namespace Poison.Mods
 
         public static readonly float[] ArmLengthAmounts = { 0.75f, 1.1f, 1.25f, 1.5f, 2f };
         public static readonly string[] ArmLengthNames = { "Shorter", "Unnoticable", "Normal", "Long", "Extreme" };
-        public static void ApplyArmLength(int index) => armlength = ArmLengthAmounts[index];
+        public static void ApplyArmLength(int index) { armlength = ArmLengthAmounts[index]; longarmCycle = index; }
 
         public static void Fly()
         {
@@ -2650,8 +2650,12 @@ namespace Poison.Mods
 
         public static void UpdateClipColliders(bool enabled)
         {
-            foreach (MeshCollider v in Resources.FindObjectsOfTypeAll<MeshCollider>())
-                v.enabled = enabled;
+            foreach (Collider c in Resources.FindObjectsOfTypeAll<Collider>())
+            {
+                if (c == null) continue;
+                if (c.isTrigger) continue;
+                c.enabled = enabled;
+            }
         }
 
         public static void Noclip()
@@ -3884,7 +3888,7 @@ namespace Poison.Mods
         public static int pullPowerInt;
         public static readonly float[] PullModPowers = { 0.05f, 0.1f, 0.2f, 0.4f };
         public static readonly string[] PullModPowerNames = { "Normal", "Medium", "Strong", "Powerful" };
-        public static void ApplyPullModPower(int index) => pullPower = PullModPowers[index];
+        public static void ApplyPullModPower(int index) { pullPower = PullModPowers[index]; pullPowerInt = index; }
 
         private static float pullPower = 0.05f;
         private static readonly Dictionary<bool, bool> previousTouchingGround = new Dictionary<bool, bool>();
@@ -3908,6 +3912,11 @@ namespace Poison.Mods
 
         public static void PullMod()
         {
+            if (!leftGrab && !rightGrab)
+            {
+                previousTouchingGround.Clear();
+                return;
+            }
             ProcessPullHand(false);
             ProcessPullHand(true);
         }
@@ -4173,21 +4182,29 @@ namespace Poison.Mods
 
         public static void DestroyVelocityTrackers()
         {
-            Object.Destroy(lvT);
-            Object.Destroy(rvT);
+            if (lvT != null) Object.Destroy(lvT);
+            if (rvT != null) Object.Destroy(rvT);
+            lvT = null;
+            rvT = null;
         }
 
         public static float predCount = 0.0125f;
         public static int predInt = 1;
         public static readonly float[] PredictionAmounts = { 0.00625f, 0.0125f, 0.025f, 0.05f };
         public static readonly string[] PredictionAmountNames = { "Low", "Normal", "High", "Extreme" };
-        public static void ApplyPredictionAmount(int index) => predCount = PredictionAmounts[index];
+        public static void ApplyPredictionAmount(int index) { predCount = PredictionAmounts[index]; predInt = index; }
         public static void VelocityLongArms()
         {
+            if (lvT == null || rvT == null) return;
             lvT.transform.position = GorillaTagger.Instance.headCollider.transform.position - GorillaTagger.Instance.leftHandTransform.position;
             rvT.transform.position = GorillaTagger.Instance.headCollider.transform.position - GorillaTagger.Instance.rightHandTransform.position;
-            GTPlayer.Instance.GetControllerTransform(true).transform.position -= lvT.GetComponent<GorillaVelocityTracker>().GetAverageVelocity(true, 0) * predCount;
-            GTPlayer.Instance.GetControllerTransform(false).transform.position -= rvT.GetComponent<GorillaVelocityTracker>().GetAverageVelocity(true, 0) * predCount;
+            Vector3 leftOffset = lvT.GetComponent<GorillaVelocityTracker>().GetAverageVelocity(true, 0) * predCount;
+            Vector3 rightOffset = rvT.GetComponent<GorillaVelocityTracker>().GetAverageVelocity(true, 0) * predCount;
+            const float maxOffset = 2f;
+            if (leftOffset.sqrMagnitude > maxOffset * maxOffset) leftOffset = Vector3.ClampMagnitude(leftOffset, maxOffset);
+            if (rightOffset.sqrMagnitude > maxOffset * maxOffset) rightOffset = Vector3.ClampMagnitude(rightOffset, maxOffset);
+            GTPlayer.Instance.GetControllerTransform(true).transform.position -= leftOffset;
+            GTPlayer.Instance.GetControllerTransform(false).transform.position -= rightOffset;
         }
 
         public static int fakeLagDelayIndex = 10;

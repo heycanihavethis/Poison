@@ -57,6 +57,11 @@ namespace Poison.Utilities
         {
             if (assetBundle == null)
                 LoadAssetBundle();
+            if (assetBundle == null)
+            {
+                LogManager.LogError($"AssetBundle is null; cannot load asset '{assetName}'.");
+                return null;
+            }
 
             T gameObject = assetBundle.LoadAsset(assetName) as T;
             return gameObject;

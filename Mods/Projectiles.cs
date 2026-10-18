@@ -435,19 +435,19 @@ namespace Poison.Mods
                             {
                                 Color32 color32 = color.Value;
 
-                                object[] projectileSendData = new object[8];
+                                object[] projectileSendData = new object[9];
                                 projectileSendData[0] = "sendSnowball";
                                 projectileSendData[1] = projectile.Name;
-                                projectileSendData[1] = position;
-                                projectileSendData[2] = velocity;
-                                projectileSendData[3] = color32.r;
-                                projectileSendData[4] = color32.g;
-                                projectileSendData[5] = color32.b;
-                                projectileSendData[6] = GrowingSnowball.GetValidSizeLevel(SnowballSize);
-                                projectileSendData[7] = index;
+                                projectileSendData[2] = position;
+                                projectileSendData[3] = velocity;
+                                projectileSendData[4] = color32.r;
+                                projectileSendData[5] = color32.g;
+                                projectileSendData[6] = color32.b;
+                                projectileSendData[7] = GrowingSnowball.GetValidSizeLevel(growingSnowballSize);
+                                projectileSendData[8] = index;
 
                                 PhotonNetwork.RaiseEvent(FriendManager.FriendByte, projectileSendData, options, SendOptions.SendReliable);
-                                LaunchLocalGrowingSnowball(projectile.Name, position, velocity, GrowingSnowball.GetValidSizeLevel(SnowballSize), index, color.Value, VRRig.LocalRig);
+                                LaunchLocalGrowingSnowball(projectile.Name, position, velocity, GrowingSnowball.GetValidSizeLevel(growingSnowballSize), index, color.Value, VRRig.LocalRig);
                             }
                             else if (NetworkSystem.Instance.InRoom)
                             {
@@ -518,6 +518,10 @@ namespace Poison.Mods
                             RPCProtection();
                         }
                     }
+                }
+                else if (NetworkSystem.Instance.InRoom)
+                {
+                    LogManager.Log($"Projectile send rejected by CanCallNow (game CallLimiter). projDebounceType={projDebounceType} (-1 = use game limiter, >0 = custom debounce).");
                 }
             }
             catch (Exception e) { LogManager.LogError($"Projectile error: {e.Message}. Full exception:\n{e}"); }

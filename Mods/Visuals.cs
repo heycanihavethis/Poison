@@ -2547,6 +2547,20 @@ namespace Poison.Mods
                                 }
                             }
 
+                            if (Poison.Classes.Menu.VanillaPropsBaseline.IsLoaded)
+                            {
+                                var rigProps = vrrig.GetPhotonPlayer().CustomProperties;
+                                var unknownKeys = Poison.Classes.Menu.VanillaPropsBaseline.FindUnknownKeys(rigProps);
+                                foreach (string unknownKey in unknownKeys)
+                                {
+                                    string flag = $"Unknown:{unknownKey}";
+                                    if (specialMods == null)
+                                        specialMods = flag;
+                                    else
+                                        specialMods += ", " + flag;
+                                }
+                            }
+
                             tmp.SafeSetText(specialMods);
 
                             tmp.color = vrrig.GetColor();

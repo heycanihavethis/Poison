@@ -29,6 +29,6 @@ namespace Poison.Patches.Menu
         public static bool enabled;
 
         private static bool Prefix(GorillaSpeakerLoudness __instance, ref bool ___isMicEnabled, ref bool ___isSpeaking, ref float ___loudness) =>
-            !enabled || __instance.gameObject.name != "Local Gorilla Player";
+            !enabled || __instance.gameObject.name != "Local Gorilla Player(Clone)";
     }
 }

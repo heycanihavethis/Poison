@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Project>
 	<PropertyGroup>
-		<GamePath Condition="Exists('D:\SteamLibrary\steamapps\common\Gorilla Tag')">D:\SteamLibrary\steamapps\common\Gorilla Tag</GamePath>
+		<GamePath Condition="Exists('G:\SteamLibrary\steamapps\common\Gorilla Tag')">G:\SteamLibrary\steamapps\common\Gorilla Tag</GamePath>
+		<GamePath Condition="!Exists('G:\SteamLibrary\steamapps\common\Gorilla Tag') and Exists('D:\SteamLibrary\steamapps\common\Gorilla Tag')">D:\SteamLibrary\steamapps\common\Gorilla Tag</GamePath>
 		<GamePath Condition="!Exists('D:\SteamLibrary\steamapps\common\Gorilla Tag') and Exists('C:\Program Files (x86)\Steam\steamapps\common\Gorilla Tag')">C:\Program Files (x86)\Steam\steamapps\common\Gorilla Tag</GamePath>
 		<GameAssemblyPath>$(GamePath)\Gorilla Tag_Data\Managed</GameAssemblyPath>
 		<BepInExAssemblyPath>$(GamePath)\BepInEx\core</BepInExAssemblyPath>

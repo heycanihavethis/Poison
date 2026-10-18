@@ -903,7 +903,7 @@ namespace Poison.Mods
 
             targetPosition ??= GorillaTagger.Instance.bodyCollider.transform.position;
 
-            int[] objectIds = manager.itemPrefabFactory.Keys.ToArray();
+            int[] objectIds = GameEntityManager.itemPrefabFactory.Keys.ToArray();
             int[] ids = new int[ItemCrashCount];
             Vector3[] positions = new Vector3[ItemCrashCount];
             Quaternion[] rotations = new Quaternion[ItemCrashCount];
@@ -1503,7 +1503,7 @@ namespace Poison.Mods
                 CreateItem(target, hashes[0], positions[0], rotations[0], Vector3.zero, Vector3.zero, sendData.Length > 0 ? sendData[1] : 0L, manager);
         }
 
-        public static Dictionary<string, int> ObjectByName { get => ManagerRegistry.GhostReactor.GameEntityManager.itemPrefabFactory.ToDictionary(prefab => prefab.Value.name, prefab => prefab.Key); }
+        public static Dictionary<string, int> ObjectByName { get => GameEntityManager.itemPrefabFactory.ToDictionary(prefab => prefab.Value.name, prefab => prefab.Key); }
 
         public static void SpamObjectGrip(int objectId)
         {
@@ -2575,7 +2575,7 @@ namespace Poison.Mods
         public static Dictionary<string, int> GadgetByName
         {
             get =>
-                ManagerRegistry.SuperInfection.GameEntityManager.itemPrefabFactory
+                GameEntityManager.itemPrefabFactory
                 .ToDictionary(prefab => prefab.Value.name, prefab => prefab.Key);
         }
 

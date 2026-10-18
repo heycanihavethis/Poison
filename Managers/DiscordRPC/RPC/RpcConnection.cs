@@ -432,7 +432,7 @@ namespace Poison.Managers.DiscordRPC.RPC
                         long sleep = delay.NextDelay();
 
                         Logger.Trace("Waiting {0}ms before attempting to connect again", sleep);
-                        Thread.Sleep(delay.NextDelay());
+                        Thread.Sleep((int)sleep);
                     }
                 }
                 //catch(InvalidPipeException e)
