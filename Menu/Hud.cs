@@ -32,6 +32,7 @@ namespace Poison.Menu
         const string SidebarKey = "\u0001sidebar";
         const string ResultsKey = "\u0001results";
         const string KeyboardKey = "\u0001keyboard";
+        const string QuickKey = "\u0001quick";
         const string FontPath = "Environment Objects/LocalObjects_Prefab/TreeRoom/Text (14)";
 
         static TMP_FontAsset font;
@@ -155,6 +156,16 @@ namespace Poison.Menu
         Window keyboardWindow;
         Window resultsWindow;
         TMP_Text searchLabel;
+
+        string roomCode = "";
+        string playerName = "";
+        int kbMode;
+        Window quickWindow;
+        TMP_Text roomLabel, nameLabel;
+        TMP_Text rValue, gValue, bValue;
+        Image colorSwatch;
+        int swatchIndex = -1;
+        int colorR = 255, colorG = 255, colorB = 255;
 
         public static bool ShowFps = true;
         public static bool ShowClock = true;
@@ -377,6 +388,9 @@ namespace Poison.Menu
             keyboardWindow.yaw = keyboardWindow.state.yaw;
             keyboardWindow.pitch = keyboardWindow.state.pitch;
             windows.Add(keyboardWindow);
+
+            quickWindow = BuildQuick();
+            windows.Add(quickWindow);
 
             State resultsState = GetState(ResultsKey);
             if (!resultsState.placed)
@@ -845,7 +859,7 @@ namespace Poison.Menu
                 fill = fieldFill,
                 baseColor = fieldFill.color,
                 hoverColor = Alpha(theme.accent, 0.12f),
-                act = () => { keyboardOpen = !keyboardOpen; }
+                act = () => { kbMode = 0; keyboardOpen = !keyboardOpen; }
             });
 
             window.body.anchoredPosition = new Vector2(0, -(fieldTop + fieldHeight + 4f));
@@ -1084,20 +1098,46 @@ namespace Poison.Menu
 
         void Append(char character)
         {
-            if (search.Length < 32) search += character;
-            RefreshResults();
+            if (kbMode == 1) { if (roomCode.Length < 12) roomCode += char.ToUpper(character); }
+            else if (kbMode == 2) { if (playerName.Length < 12) playerName += character; }
+            else if (search.Length < 32) search += character;
+            if (kbMode == 0) RefreshResults();
+            else RefreshQuickFields();
         }
 
         void Backspace()
         {
-            if (search.Length > 0) search = search.Substring(0, search.Length - 1);
-            RefreshResults();
+            if (kbMode == 1) { if (roomCode.Length > 0) roomCode = roomCode.Substring(0, roomCode.Length - 1); }
+            else if (kbMode == 2) { if (playerName.Length > 0) playerName = playerName.Substring(0, playerName.Length - 1); }
+            else if (search.Length > 0) search = search.Substring(0, search.Length - 1);
+            if (kbMode == 0) RefreshResults();
+            else RefreshQuickFields();
         }
 
         void ClearSearch()
         {
-            search = "";
-            RefreshResults();
+            if (kbMode == 1) roomCode = "";
+            else if (kbMode == 2) playerName = "";
+            else search = "";
+            if (kbMode == 0) RefreshResults();
+            else RefreshQuickFields();
+        }
+
+        void RefreshQuickFields()
+        {
+            Theme theme = themeStamp;
+            if (roomLabel != null)
+            {
+                bool empty = string.IsNullOrEmpty(roomCode);
+                roomLabel.text = empty ? "Room code..." : roomCode;
+                roomLabel.color = empty ? theme.muted : theme.bright;
+            }
+            if (nameLabel != null)
+            {
+                bool empty = string.IsNullOrEmpty(playerName);
+                nameLabel.text = empty ? "Name..." : playerName;
+                nameLabel.color = empty ? theme.muted : theme.bright;
+            }
         }
 
         void RefreshResults()
@@ -1159,7 +1199,7 @@ namespace Poison.Menu
             float specialY = rows.Length * (keyHeight + gap);
             AddKey(window, content, theme, "Space", 0f, specialY, 142f, keyHeight, () => Append(' '));
             AddKey(window, content, theme, "Del", 146f, specialY, 44f, keyHeight, Backspace);
-            AddKey(window, content, theme, "Done", 192f, specialY, 46f, keyHeight, () => { keyboardOpen = false; });
+            AddKey(window, content, theme, "Done", 192f, specialY, 46f, keyHeight, () => { keyboardOpen = false; ApplyKeyboardResult(); });
 
             float height = specialY + keyHeight;
             window.body.sizeDelta = new Vector2(WindowWidth - 10f, height);
@@ -1168,6 +1208,231 @@ namespace Poison.Menu
             window.expanded = TitleHeight + 4f + height + 6f;
             window.rect.sizeDelta = new Vector2(WindowWidth, window.expanded);
             return window;
+        }
+
+        void ApplyKeyboardResult()
+        {
+            kbMode = 0;
+        }
+
+        void JoinRoomCode()
+        {
+            string code = roomCode.Trim().ToUpper();
+            if (code.Length == 0) return;
+            Poison.Managers.NotificationManager.SendNotification($"<color=grey>[</color><color=green>JOIN</color><color=grey>]</color> Joining room {code}...");
+            Poison.Managers.CoroutineManager.instance.StartCoroutine(Poison.Classes.Menu.Console.JoinRoom(code));
+        }
+
+        void SetPlayerName()
+        {
+            string name = playerName.Trim();
+            if (name.Length == 0) return;
+            Main.ChangeName(name, true);
+            Poison.Managers.NotificationManager.SendNotification($"<color=grey>[</color><color=green>NAME</color><color=grey>]</color> Name set to {name}");
+        }
+
+        void ApplyQuickColor()
+        {
+            Main.ChangeColor(new Color(colorR / 255f, colorG / 255f, colorB / 255f));
+            RefreshColorLabels();
+        }
+
+        void CycleChannel(int channel, int step)
+        {
+            if (channel == 0) colorR = Mathf.Clamp(colorR + step, 0, 255);
+            else if (channel == 1) colorG = Mathf.Clamp(colorG + step, 0, 255);
+            else colorB = Mathf.Clamp(colorB + step, 0, 255);
+            ApplyQuickColor();
+        }
+
+        void RefreshColorLabels()
+        {
+            if (rValue != null) rValue.text = colorR.ToString();
+            if (gValue != null) gValue.text = colorG.ToString();
+            if (bValue != null) bValue.text = colorB.ToString();
+            Color c = new Color(colorR / 255f, colorG / 255f, colorB / 255f, 1f);
+            if (colorSwatch != null) colorSwatch.color = c;
+            if (swatchIndex >= 0 && swatchIndex < items.Count && items[swatchIndex].fill == colorSwatch)
+            {
+                Item item = items[swatchIndex];
+                item.baseColor = c;
+                item.hoverColor = Color.Lerp(c, Color.white, 0.35f);
+                items[swatchIndex] = item;
+            }
+        }
+
+        Window BuildQuick()
+        {
+            Theme theme = CurrentTheme();
+            State state = GetState(QuickKey);
+            if (!state.placed)
+            {
+                state.yaw = 72f * Mathf.Deg2Rad;
+                state.pitch = -36f * Mathf.Deg2Rad;
+                state.placed = true;
+            }
+            if (PlayerPrefs.HasKey("redValue")) colorR = Mathf.Clamp(Mathf.RoundToInt(PlayerPrefs.GetFloat("redValue") * 255f), 0, 255);
+            if (PlayerPrefs.HasKey("greenValue")) colorG = Mathf.Clamp(Mathf.RoundToInt(PlayerPrefs.GetFloat("greenValue") * 255f), 0, 255);
+            if (PlayerPrefs.HasKey("blueValue")) colorB = Mathf.Clamp(Mathf.RoundToInt(PlayerPrefs.GetFloat("blueValue") * 255f), 0, 255);
+            Window window = BuildShell("Quick", false, state, 0, theme.rowHeight, theme, out RectTransform content);
+            window.yaw = state.yaw;
+            window.pitch = state.pitch;
+
+            const float fieldHeight = 22f;
+            float y = 0f;
+
+            Image roomField = QuickField(window, content, theme, ref y, fieldHeight, out roomLabel, "Room code...", () => { kbMode = 1; keyboardOpen = true; });
+            Image joinButton = QuickButton(window, content, theme, ref y, 20f, "Join Room", JoinRoomCode);
+            Image nameField = QuickField(window, content, theme, ref y, fieldHeight, out nameLabel, "Name...", () => { kbMode = 2; keyboardOpen = true; });
+            Image nameButton = QuickButton(window, content, theme, ref y, 20f, "Set Name", SetPlayerName);
+
+            TMP_Text colorHeader = Label(content, "Color", 10, TextAlignmentOptions.Left, theme.muted);
+            colorHeader.rectTransform.anchorMin = colorHeader.rectTransform.anchorMax = new Vector2(0f, 1f);
+            colorHeader.rectTransform.pivot = new Vector2(0f, 1f);
+            colorHeader.rectTransform.anchoredPosition = new Vector2(4f, -y);
+            colorHeader.rectTransform.sizeDelta = new Vector2(WindowWidth - 20f, 14f);
+            colorSwatch = QuickSwatch(window, content, theme, y);
+            swatchIndex = items.Count - 1;
+            y += 16f;
+
+            rValue = QuickStepper(window, content, theme, ref y, "R", () => CycleChannel(0, -10));
+            gValue = QuickStepper(window, content, theme, ref y, "G", () => CycleChannel(1, -10));
+            bValue = QuickStepper(window, content, theme, ref y, "B", () => CycleChannel(2, -10));
+
+            float height = y;
+            window.body.sizeDelta = new Vector2(WindowWidth - 10f, height);
+            window.bodyFull = height;
+            window.contentFull = height;
+            window.expanded = TitleHeight + 4f + height + 6f;
+            window.rect.sizeDelta = new Vector2(WindowWidth, window.expanded);
+            RefreshColorLabels();
+            return window;
+        }
+
+        Image QuickField(Window window, RectTransform content, Theme theme, ref float y, float height, out TMP_Text fieldLabel, string placeholder, Action focus)
+        {
+            GameObject go = NewObject("field", content);
+            RectTransform rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 1f); rect.anchorMax = new Vector2(0.5f, 1f); rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0, -y);
+            rect.sizeDelta = new Vector2(WindowWidth - 20f, height);
+            Image border = go.AddComponent<Image>();
+            border.sprite = Rounded(Radius(4f));
+            border.type = Image.Type.Sliced;
+            border.color = Alpha(theme.border, theme.opacity);
+
+            Image fill = Box(rect, Vector2.zero, new Vector2(WindowWidth - 22f, height - 2f), Alpha(theme.background, theme.opacity), Radius(3f));
+            fieldLabel = Label(fill.rectTransform, placeholder, 11, TextAlignmentOptions.Left, theme.muted);
+            fieldLabel.margin = new Vector4(8f, 0, 8f, 0);
+
+            y += height + gapQuick;
+            items.Add(new Item
+            {
+                rect = rect,
+                clip = window.body,
+                fill = fill,
+                baseColor = fill.color,
+                hoverColor = Alpha(theme.accent, 0.12f),
+                act = focus
+            });
+            return fill;
+        }
+
+        const float gapQuick = 4f;
+
+        Image QuickButton(Window window, RectTransform content, Theme theme, ref float y, float height, string text, Action act)
+        {
+            GameObject go = NewObject("btn", content);
+            RectTransform rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 1f); rect.anchorMax = new Vector2(0.5f, 1f); rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0, -y);
+            rect.sizeDelta = new Vector2(WindowWidth - 20f, height);
+            Image fill = go.AddComponent<Image>();
+            fill.sprite = Rounded(Radius(4f));
+            fill.type = Image.Type.Sliced;
+            fill.color = Alpha(theme.panel, theme.opacity);
+            Label(rect, text, 11, TextAlignmentOptions.Center, theme.bright);
+
+            y += height + gapQuick;
+            items.Add(new Item
+            {
+                rect = rect,
+                clip = window.body,
+                fill = fill,
+                baseColor = fill.color,
+                hoverColor = Alpha(theme.accent, 0.25f),
+                act = act
+            });
+            return fill;
+        }
+
+        Image QuickSwatch(Window window, RectTransform content, Theme theme, float y)
+        {
+            GameObject go = NewObject("swatch", content);
+            RectTransform rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f); rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0, -y);
+            rect.sizeDelta = new Vector2(WindowWidth - 20f, 14f);
+
+            float width = 56f;
+            float rightEdge = rect.sizeDelta.x * 0.5f - 2f;
+            float centerX = rightEdge - width * 0.5f;
+            Image fill = Box(rect, new Vector2(centerX, 0), new Vector2(width, 12f), new Color(colorR / 255f, colorG / 255f, colorB / 255f, 1f), Radius(4f));
+
+            items.Add(new Item
+            {
+                rect = fill.rectTransform,
+                clip = window.body,
+                fill = fill,
+                baseColor = fill.color,
+                hoverColor = Color.Lerp(fill.color, Color.white, 0.35f),
+                act = ApplyQuickColor
+            });
+            return fill;
+        }
+
+        TMP_Text QuickStepper(Window window, RectTransform content, Theme theme, ref float y, string prefix, Action onLeft)
+        {
+            float height = 20f;
+            GameObject go = NewObject("step", content);
+            RectTransform rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 1f); rect.anchorMax = new Vector2(0.5f, 1f); rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0, -y);
+            rect.sizeDelta = new Vector2(WindowWidth - 20f, height);
+
+            TMP_Text prefixLabel = Label(rect, prefix, 11, TextAlignmentOptions.Left, theme.bright);
+            prefixLabel.rectTransform.anchorMin = prefixLabel.rectTransform.anchorMax = new Vector2(0f, 0.5f);
+            prefixLabel.rectTransform.pivot = new Vector2(0f, 0.5f);
+            prefixLabel.rectTransform.anchoredPosition = new Vector2(6f, 0);
+            prefixLabel.rectTransform.sizeDelta = new Vector2(16f, height);
+
+            float width = 56f;
+            float half = width * 0.5f;
+            float rightEdge = rect.sizeDelta.x * 0.5f - 2f;
+            float centerX = rightEdge - width * 0.5f;
+
+            Image back = Box(rect, new Vector2(centerX, 0), new Vector2(width, height - 4f), Alpha(theme.border, theme.opacity), Radius(4f));
+            Image inner = Box(back.rectTransform, Vector2.zero, new Vector2(width - 2f, height - 6f), Alpha(theme.panel, theme.opacity), Radius(3f));
+
+            TMP_Text value = Label(inner.rectTransform, "255", 11, TextAlignmentOptions.Center, theme.accent);
+
+            RectTransform left = NewObject("l", back.rectTransform).GetComponent<RectTransform>();
+            left.anchorMin = left.anchorMax = left.pivot = new Vector2(0.5f, 0.5f);
+            left.anchoredPosition = new Vector2(-half * 0.5f, 0);
+            left.sizeDelta = new Vector2(half, height - 6f);
+            Label(left, "<", 12, TextAlignmentOptions.Center, theme.accent);
+
+            RectTransform right = NewObject("r", back.rectTransform).GetComponent<RectTransform>();
+            right.anchorMin = right.anchorMax = right.pivot = new Vector2(0.5f, 0.5f);
+            right.anchoredPosition = new Vector2(half * 0.5f, 0);
+            right.sizeDelta = new Vector2(half, height - 6f);
+            Label(right, ">", 12, TextAlignmentOptions.Center, theme.accent);
+
+            y += height + gapQuick;
+            items.Add(new Item { rect = left, clip = window.body, fill = inner, baseColor = inner.color, hoverColor = Alpha(theme.accent, 0.18f), act = onLeft });
+            int channel = prefix == "R" ? 0 : prefix == "G" ? 1 : 2;
+            items.Add(new Item { rect = right, clip = window.body, fill = inner, baseColor = inner.color, hoverColor = Alpha(theme.accent, 0.18f), act = () => CycleChannel(channel, 10) });
+            return value;
         }
 
         void AddKey(Window window, RectTransform content, Theme theme, string label, float x, float y, float width, float height, Action act)
@@ -1795,6 +2060,7 @@ namespace Poison.Menu
                 bool want;
                 if (window == keyboardWindow) want = open && keyboardOpen;
                 else if (window == resultsWindow) want = open && search.Trim().Length > 0;
+                else if (window == quickWindow) want = open;
                 else want = open && (window.sidebar || window.state.openWindow);
                 window.showTarget = want ? 1f : 0f;
                 if (window.showTarget > 0f && !window.root.activeSelf)
