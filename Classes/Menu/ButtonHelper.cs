@@ -166,7 +166,7 @@ namespace Poison.Classes.Menu
             button.onValueChanged = () =>
             {
                 RefreshLabel();
-                apply(button.GetValue<int>());
+                apply?.Invoke(button.GetValue<int>());
             };
 
             button.cycleValue = positive =>
