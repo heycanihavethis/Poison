@@ -126,7 +126,7 @@ namespace Poison.Mods
             }
         }
 
-        public static void QuarantineAll()
+        public static void QuarantineAll() 
         {
             foreach (VRRig rig in VRRigExtensions.ActiveRigs)
             {
