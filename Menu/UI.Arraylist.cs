@@ -23,6 +23,8 @@ namespace Poison.Menu
         private readonly Dictionary<ButtonInfo, ListRow> listRows = new Dictionary<ButtonInfo, ListRow>();
         private GUIStyle listStyle;
 
+        public static bool ArraylistEnabled => Instance == null || Instance.options.arraylist;
+
         private void UpdateArraylist()
         {
             foreach (ListRow row in listRows.Values) row.active = false;
@@ -45,7 +47,7 @@ namespace Poison.Menu
 
         private void DrawArraylist()
         {
-            if (!options.arraylist || listRows.Count == 0) return;
+            if (!options.arraylist || allHidden || !showEnabledModsVR || listRows.Count == 0) return;
 
             Matrix4x4 matrix = GUI.matrix;
             Color color = GUI.color;

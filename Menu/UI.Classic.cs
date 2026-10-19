@@ -235,7 +235,7 @@ namespace Poison.Menu
 
             if (Button(new Rect(10, height - 76, rail - 20, 28), "Original UI"))
                 SetClassic(false);
-            if (Button(new Rect(10, height - 42, rail - 20, 26), "Hide [\\]")) ToggleGUI();
+            if (Button(new Rect(10, height - 42, rail - 20, 26), "Hide [\\]")) ToggleGUI(true);
 
             if (tab == 0)
             {

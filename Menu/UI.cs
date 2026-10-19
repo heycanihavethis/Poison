@@ -20,6 +20,7 @@ namespace Poison.Menu
     public partial class UI : MonoBehaviour
     {
         public static UI Instance;
+        public static bool allHidden;
         public static Texture2D watermarkImage;
 
         public static bool IsTyping => Hud.HasMouse ? Hud.Instance.IsTyping :
@@ -184,6 +185,8 @@ namespace Poison.Menu
             Instance = this;
             LoadOptions();
             isOpen = !File.Exists(hidePath);
+            try { allHidden = !isOpen && File.ReadAllText(hidePath) == "all"; }
+            catch (Exception error) { DebugPrint(error.Message); }
             Buttons.OnCategoryChanged += CategoryChanged;
             watermarkImage = LoadTextureFromResource($"{PluginInfo.ClientResourcePath}.icon.png");
         }
@@ -202,10 +205,7 @@ namespace Poison.Menu
             if (!textFocused && (keyboard?.backslashKey.wasPressedThisFrame == true ||
                 options.remoteMouse && keyboard?.homeKey.wasPressedThisFrame == true))
             {
-                if (Hud.InUse && Hud.Instance != null)
-                    Hud.Instance.SetOpen(!Hud.Instance.IsOpen);
-                else
-                    ToggleGUI();
+                ToggleGUI(true);
             }
             if (isOpen && !options.classicUI && !textFocused && keyboard?.backquoteKey.wasPressedThisFrame == true)
                 TogglePanel(PanelConsole, null);
@@ -307,19 +307,25 @@ namespace Poison.Menu
             ClearInput();
         }
 
-        private void ToggleGUI()
+        private void ToggleGUI(bool everything = false)
         {
-            isOpen = !isOpen;
+            if (everything)
+            {
+                allHidden = !allHidden;
+                isOpen = !allHidden;
+            }
+            else
+                isOpen = !isOpen;
             refresh = true;
             if (isOpen) EnsurePanels();
             if (!isOpen) ReleaseCursor();
             try
             {
-                if (isOpen && File.Exists(hidePath)) File.Delete(hidePath);
-                else if (!isOpen)
+                if (!allHidden && isOpen && File.Exists(hidePath)) File.Delete(hidePath);
+                else if (allHidden || !isOpen)
                 {
                     Directory.CreateDirectory(PluginInfo.BaseDirectory);
-                    File.WriteAllText(hidePath, "hidden");
+                    File.WriteAllText(hidePath, allHidden ? "all" : "hidden");
                 }
             }
             catch (Exception error) { DebugPrint(error.Message); }
@@ -599,7 +605,7 @@ namespace Poison.Menu
 
         internal void DrawUI()
         {
-            if (fade < 0.005f && !isOpen && !options.arraylist) return;
+            if (allHidden || (fade < 0.005f && !isOpen && !options.arraylist)) return;
             Setup();
             Matrix4x4 oldMatrix = GUI.matrix;
             Color oldColor = GUI.color;

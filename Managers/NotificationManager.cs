@@ -154,6 +154,7 @@ namespace Poison.Managers
                 canvas.transform.position = mainCamera.transform.TransformPoint(0f, 0f, 1.6f);
                 canvas.transform.rotation = mainCamera.transform.rotation * Quaternion.Euler(0, 90, 0);
                 canvas.transform.localScale = Vector3.one * (scaleWithPlayer ? GTPlayer.Instance.scale : 1f);
+                canvas.SetActive(true);
 
                 UpdateNotificationExpiry();
 
