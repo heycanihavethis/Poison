@@ -2648,14 +2648,29 @@ namespace Poison.Mods
             playspace.enabled = false;
         }
 
+        private static readonly List<Collider> clipDisabledColliders = new List<Collider>();
         public static void UpdateClipColliders(bool enabled)
         {
+            if (enabled)
+            {
+                foreach (Collider c in clipDisabledColliders)
+                    if (c != null) c.enabled = true;
+                clipDisabledColliders.Clear();
+                return;
+            }
+
             foreach (Collider c in Resources.FindObjectsOfTypeAll<Collider>())
             {
-                if (c == null) continue;
-                if (c.isTrigger) continue;
-                c.enabled = enabled;
+                if (c == null || c.isTrigger || !c.enabled || !c.gameObject.scene.IsValid()) continue;
+                c.enabled = false;
+                clipDisabledColliders.Add(c);
             }
+        }
+
+        public static void DisableNoclip()
+        {
+            noclip = false;
+            UpdateClipColliders(true);
         }
 
         public static void Noclip()
