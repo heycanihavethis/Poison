@@ -62,7 +62,11 @@ namespace Poison.Mods
         public static readonly string[] PlatformTypeNames = {
             "Normal", "Invisible", "Rainbow", "Random Color", "Noclip", "Glass", "Projectile"
         };
-        public static void ApplyPlatformType(int index) => platformMode = index;
+        public static void ApplyPlatformType(int index)
+        {
+            DisablePlatforms();
+            platformMode = index;
+        }
 
         public static int platformShape;
         public static readonly string[] PlatformShapeNames = {
@@ -108,9 +112,6 @@ namespace Poison.Mods
                 case 1:
                 case 6:
                     platformRenderer.enabled = false;
-                    break;
-                case 4:
-                    UpdateClipColliders(false);
                     break;
                 case 5:
                     platform.AddComponent<GorillaSurfaceOverride>().overrideIndex = 29;
@@ -162,7 +163,7 @@ namespace Poison.Mods
             if (Buttons.GetIndex("Non-Sticky Platforms").enabled)
                 platform.transform.position += right * ((left ? 1f : -1f) * ((0.025f + platform.transform.localScale.x / 2f) * (scaleWithPlayer ? GTPlayer.Instance.scale : 1f)));
 
-            FriendManager.PlatformSpawned(true, platform.transform.position, platform.transform.rotation, platform.transform.localScale, GetPlatformPrimitiveType());
+            FriendManager.PlatformSpawned(left, platform.transform.position, platform.transform.rotation, platform.transform.localScale, GetPlatformPrimitiveType());
         }
 
         public static int flySpeedCycle = 1;
@@ -204,20 +205,18 @@ namespace Poison.Mods
                         if (Buttons.GetIndex("Platform Gravity").enabled)
                         {
                             platform.AddComponent(typeof(Rigidbody));
-                            Object.Destroy(platform.GetComponent<Collider>());
+                            foreach (Collider collider in platform.GetComponentsInChildren<Collider>(true))
+                                collider.enabled = false;
                             Object.Destroy(platform, 2f);
                         }
                         else
-                            Object.Destroy(platform);
+                            DestroyPlatform(platform);
 
                         if (left)
                             leftplat = null;
                         else
                             rightplat = null;
-                        if (platformMode == 4 && rightplat == null)
-                            UpdateClipColliders(true);
-
-                        FriendManager.PlatformDespawned(true);
+                        FriendManager.PlatformDespawned(left);
                         break;
                     }
             }
@@ -230,10 +229,33 @@ namespace Poison.Mods
 
             ProcessPlatform(true, left ?? leftGrab);
             ProcessPlatform(false, right ?? rightGrab);
+            UpdateClipColliders(!(platformMode == 4 && (leftplat != null || rightplat != null)), "Platforms");
+        }
+
+        private static void DestroyPlatform(GameObject platform)
+        {
+            if (platform == null) return;
+            platform.SetActive(false);
+            Object.Destroy(platform);
+        }
+
+        public static void DisablePlatforms()
+        {
+            bool hadLeft = leftplat != null;
+            bool hadRight = rightplat != null;
+            DestroyPlatform(leftplat);
+            DestroyPlatform(rightplat);
+            leftplat = null;
+            rightplat = null;
+            UpdateClipColliders(true, "Platforms");
+            if (hadLeft) FriendManager.PlatformDespawned(true);
+            if (hadRight) FriendManager.PlatformDespawned(false);
         }
 
         private static readonly Dictionary<bool, List<GameObject>> frozonicPlatforms = new Dictionary<bool, List<GameObject>>();
         private static readonly Dictionary<bool, int> platformIndex = new Dictionary<bool, int>();
+        private static Collider frozoneBodyCollider;
+        private static bool frozoneBodyWasEnabled;
         public static void HandleFrozone(bool left)
         {
             bool grip = left ? leftGrab : rightGrab;
@@ -285,7 +307,31 @@ namespace Poison.Mods
             HandleFrozone(true);
             HandleFrozone(false);
 
-            GorillaTagger.Instance.bodyCollider.enabled = !(leftGrab || rightGrab);
+            if (leftGrab || rightGrab)
+            {
+                if (frozoneBodyCollider == null)
+                {
+                    frozoneBodyCollider = GorillaTagger.Instance.bodyCollider;
+                    frozoneBodyWasEnabled = frozoneBodyCollider.enabled;
+                }
+                frozoneBodyCollider.enabled = false;
+            }
+            else RestoreFrozoneBody();
+        }
+
+        private static void RestoreFrozoneBody()
+        {
+            if (frozoneBodyCollider != null) frozoneBodyCollider.enabled = frozoneBodyWasEnabled;
+            frozoneBodyCollider = null;
+        }
+
+        public static void DisableFrozone()
+        {
+            foreach (List<GameObject> platforms in frozonicPlatforms.Values)
+                foreach (GameObject platform in platforms) DestroyPlatform(platform);
+            frozonicPlatforms.Clear();
+            platformIndex.Clear();
+            RestoreFrozoneBody();
         }
 
         public static readonly float[] SpeedBoostAmounts = { 2f, 7.5f, 8f, 9f, 200f };
@@ -2648,23 +2694,45 @@ namespace Poison.Mods
             playspace.enabled = false;
         }
 
-        private static readonly List<Collider> clipDisabledColliders = new List<Collider>();
-        public static void UpdateClipColliders(bool enabled)
+        private static readonly HashSet<string> clipOwners = new HashSet<string>();
+        private static GTPlayer clipPlayer;
+        private static LayerMask clipLayers;
+        private static Collider clipBodyCollider;
+        private static Collider clipHeadCollider;
+        private static bool clipBodyWasTrigger;
+        private static bool clipHeadWasTrigger;
+        public static void UpdateClipColliders(bool enabled, string owner = "Noclip")
         {
             if (enabled)
             {
-                foreach (Collider c in clipDisabledColliders)
-                    if (c != null) c.enabled = true;
-                clipDisabledColliders.Clear();
+                clipOwners.Remove(owner);
+                if (clipOwners.Count > 0 || clipPlayer == null) return;
+                clipPlayer.locomotionEnabledLayers = clipLayers;
+                if (clipBodyCollider != null) clipBodyCollider.isTrigger = clipBodyWasTrigger;
+                if (clipHeadCollider != null) clipHeadCollider.isTrigger = clipHeadWasTrigger;
+                clipPlayer = null;
+                clipBodyCollider = null;
+                clipHeadCollider = null;
                 return;
             }
 
-            foreach (Collider c in Resources.FindObjectsOfTypeAll<Collider>())
+            clipOwners.Add(owner);
+            if (clipPlayer != null || GTPlayer.Instance == null) return;
+            clipPlayer = GTPlayer.Instance;
+            clipLayers = clipPlayer.locomotionEnabledLayers;
+            clipBodyCollider = clipPlayer.bodyCollider;
+            clipHeadCollider = clipPlayer.headCollider;
+            if (clipBodyCollider != null)
             {
-                if (c == null || c.isTrigger || !c.enabled || !c.gameObject.scene.IsValid()) continue;
-                c.enabled = false;
-                clipDisabledColliders.Add(c);
+                clipBodyWasTrigger = clipBodyCollider.isTrigger;
+                clipBodyCollider.isTrigger = true;
             }
+            if (clipHeadCollider != null)
+            {
+                clipHeadWasTrigger = clipHeadCollider.isTrigger;
+                clipHeadCollider.isTrigger = true;
+            }
+            clipPlayer.locomotionEnabledLayers = 0;
         }
 
         public static void DisableNoclip()
