@@ -335,7 +335,11 @@ namespace Poison.Menu
                 }
                 else
                 {
-                    if (category != null ? entry.category != category : settings || entry.category == "Main") continue;
+                    if (category == "Enabled Mods")
+                    {
+                        if (!entry.button.enabled || (hideSettings && settings) || (hideMacros && entry.category.Contains("Macro"))) continue;
+                    }
+                    else if (category != null ? entry.category != category : settings || entry.category == "Main") continue;
                     if (filter.Length > 0 && !Matches(entry.title, filter) && !Matches(entry.button.buttonText, filter) &&
                         !Matches(entry.description, filter) && !Matches(entry.category, filter)) continue;
                 }

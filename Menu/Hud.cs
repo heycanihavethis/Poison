@@ -33,6 +33,7 @@ namespace Poison.Menu
         const string ResultsKey = "\u0001results";
         const string KeyboardKey = "\u0001keyboard";
         const string QuickKey = "\u0001quick";
+        const string EnabledTitle = "Enabled Mods";
         const string FontPath = "Environment Objects/LocalObjects_Prefab/TreeRoom/Text (14)";
 
         static TMP_FontAsset font;
@@ -155,6 +156,7 @@ namespace Poison.Menu
         bool disconnectShown;
         Window keyboardWindow;
         Window resultsWindow;
+        ButtonInfo[] enabledShown;
         TMP_Text searchLabel;
 
         string roomCode = "";
@@ -331,6 +333,55 @@ namespace Poison.Menu
             public ButtonInfo[] group;
         }
 
+        static ButtonInfo[] EnabledGroup()
+        {
+            var list = new List<ButtonInfo>();
+            var seen = new HashSet<ButtonInfo>();
+            string[] names = Buttons.categoryNames;
+            ButtonInfo[][] groups = Buttons.buttons;
+            if (names == null || groups == null) return list.ToArray();
+            for (int i = 0; i < Math.Min(names.Length, groups.Length); i++)
+            {
+                string name = names[i];
+                if (string.IsNullOrEmpty(name) || !CanSee(name) || groups[i] == null) continue;
+                if ((Main.hideSettings && name.Contains("Settings")) || (Main.hideMacros && name.Contains("Macro"))) continue;
+                foreach (ButtonInfo button in groups[i])
+                    if (button != null && button.enabled && !button.label && seen.Add(button)) list.Add(button);
+            }
+            list.Sort((a, b) => string.Compare(a.overlapText ?? a.buttonText, b.overlapText ?? b.buttonText, StringComparison.OrdinalIgnoreCase));
+            return list.ToArray();
+        }
+
+        void RefreshEnabled()
+        {
+            ButtonInfo[] group = EnabledGroup();
+            bool same = enabledShown != null && enabledShown.Length == group.Length;
+            if (same)
+                for (int i = 0; i < group.Length; i++)
+                    if (group[i] != enabledShown[i]) { same = false; break; }
+            if (same) return;
+            int index = windows.FindIndex(window => window.state == GetState(EnabledTitle));
+            if (index < 0) return;
+            Window previous = windows[index];
+            if (previous.dragging || previous.scrollDrag) return;
+            Transform old = previous.root != null ? previous.root.transform : null;
+            for (int i = items.Count - 1; i >= 0; i--)
+                if (items[i].rect == null || (old != null && items[i].rect.IsChildOf(old))) items.RemoveAt(i);
+            for (int i = titles.Count - 1; i >= 0; i--)
+                if (titles[i].window == previous) titles.RemoveAt(i);
+            if (previous.root != null) Destroy(previous.root);
+            Window replacement = BuildWindow(EnabledTitle, group, previous.state);
+            replacement.show = previous.show;
+            replacement.showTarget = previous.showTarget;
+            replacement.yaw = previous.yaw;
+            replacement.pitch = previous.pitch;
+            replacement.collapse = previous.collapse;
+            replacement.born = previous.born;
+            windows[index] = replacement;
+            enabledShown = group;
+            ApplyOverlay();
+        }
+
         List<Leaf> Collect()
         {
             List<Leaf> list = new List<Leaf>();
@@ -342,8 +393,8 @@ namespace Poison.Menu
             {
                 string name = names[i];
                 if (string.IsNullOrEmpty(name) || name == "Main" || !CanSee(name)) continue;
-                ButtonInfo[] group = groups[i];
-                if (group == null || group.Length == 0) continue;
+                ButtonInfo[] group = name == EnabledTitle ? EnabledGroup() : groups[i];
+                if (group == null || (group.Length == 0 && name != EnabledTitle)) continue;
                 list.Add(new Leaf { title = name, group = group });
             }
             return list;
@@ -378,6 +429,7 @@ namespace Poison.Menu
                 Leaf leaf = leaves[i];
                 State state = GetState(leaf.title);
                 Window window = BuildWindow(leaf.title, leaf.group, state);
+                if (leaf.title == EnabledTitle) enabledShown = leaf.group;
                 window.delay = i * 0.03f;
                 window.yaw = state.yaw;
                 window.pitch = state.pitch;
@@ -2036,6 +2088,7 @@ namespace Poison.Menu
             {
                 nextThemeCheck = Time.unscaledTime + 0.5f;
                 if (ThemeDiff(CurrentTheme(), themeStamp) > 0.02f) Rebuild();
+                else RefreshEnabled();
             }
 
             bool nowDisconnect = DisconnectEnabled();

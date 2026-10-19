@@ -533,7 +533,7 @@ namespace Poison.Menu
             foreach (Entry entry in entries)
             {
                 ButtonInfo button = entry.button;
-                switch (panel.kind)
+                switch (panel.kind == PanelCategory && panel.category == "Enabled Mods" ? PanelActive : panel.kind)
                 {
                     case PanelFavorites:
                         if (button.label || !favorites.Contains(button.buttonText)) continue;
