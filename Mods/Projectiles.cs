@@ -54,12 +54,62 @@ namespace Poison.Mods
             public string Name;
             public SnowballThrowable ThrowableLeft;
             public SnowballThrowable ThrowableRight;
-            public SnowballThrowable Throwable => ThrowableRight;
-            public int ThrowableIndex => Throwable.throwableMakerIndex;
+            public int ThrowableIndex;
+            public string CosmeticId;
+            private float nextResolve;
+
+            public SnowballThrowable Throwable
+            {
+                get
+                {
+                    Resolve();
+                    return ThrowableRight != null ? ThrowableRight : ThrowableLeft;
+                }
+            }
+
+            public void Resolve()
+            {
+                if (ThrowableLeft == null) ThrowableLeft = FindByThrowableIndex(SnowballMaker.leftHandInstance, ThrowableIndex);
+                if (ThrowableRight == null) ThrowableRight = FindByThrowableIndex(SnowballMaker.rightHandInstance, ThrowableIndex);
+                if (ThrowableLeft != null) ThrowableLeft.velocityEstimator = SnowballMaker.leftHandInstance?.velocityEstimator;
+                if (ThrowableRight != null) ThrowableRight.velocityEstimator = SnowballMaker.rightHandInstance?.velocityEstimator;
+                if ((ThrowableLeft != null && ThrowableRight != null) || Time.unscaledTime < nextResolve || !EnsureProjectileSystem()) return;
+                var registry = VRRig.LocalRig?.cosmeticsObjectRegistry;
+                if (registry == null || string.IsNullOrEmpty(CosmeticId)) return;
+                nextResolve = Time.unscaledTime + 5f;
+                try
+                {
+                    bool hasLeft = CosmeticsV2Spawner_Dirty.GetPlayfabIdFromThrowableIndex(true, ThrowableIndex, out string leftId);
+                    bool hasRight = CosmeticsV2Spawner_Dirty.GetPlayfabIdFromThrowableIndex(false, ThrowableIndex, out string rightId);
+                    string requested = null;
+                    if (hasLeft && ThrowableLeft == null) { registry.Cosmetic(leftId); requested = leftId; }
+                    if (hasRight && ThrowableRight == null && rightId != requested) registry.Cosmetic(rightId);
+                    if (!hasLeft && !hasRight) registry.Cosmetic(CosmeticId);
+                }
+                catch (Exception ex) { LogManager.LogError($"Loading projectile {Name} failed: {ex}"); }
+            }
         }
 
         internal static List<ProjectileEntry> _cachedProjectileEntries;
-        private static bool _isBuildingCache = false;
+        private static float _nextCacheAttempt;
+        private static float nextPrepareAttempt;
+        private static float nextLaunchWarning;
+
+        private static bool EnsureProjectileSystem()
+        {
+            if (CosmeticsV2Spawner_Dirty.isPrepared) return true;
+            if (CosmeticsController.instance == null || !CosmeticsController.instance.v2_allCosmeticsInfoAssetRef_isLoaded ||
+                !GTPlayer.hasInstance || VRRig.LocalRig == null || VRRigCache.Instance == null ||
+                CosmeticsV2Spawner_Dirty._gVRRigDatas.Count > 0 || Time.unscaledTime < nextPrepareAttempt) return false;
+            nextPrepareAttempt = Time.unscaledTime + 5f;
+            try
+            {
+                LogManager.LogWarning("Projectile cosmetics loader has not started; preparing it now");
+                CosmeticsV2Spawner_Dirty.PrepareLoadOpInfos();
+            }
+            catch (Exception ex) { LogManager.LogError($"Preparing projectile cosmetics failed: {ex}"); }
+            return CosmeticsV2Spawner_Dirty.isPrepared;
+        }
 
         public static void BuildProjectileCache(Action onComplete = null)
         {
@@ -68,134 +118,47 @@ namespace Poison.Mods
                 onComplete?.Invoke();
                 return;
             }
-            if (_isBuildingCache || !CosmeticsV2Spawner_Dirty.isPrepared)
+            if (Time.unscaledTime < _nextCacheAttempt || CosmeticsController.instance == null)
                 return;
-
-            var allCosmeticsArraySO = CosmeticsController.instance.v2_allCosmeticsInfoAssetRef.Asset as AllCosmeticsArraySO;
-            if (allCosmeticsArraySO == null)
-                return;
-
-            _isBuildingCache = true;
 
             try
             {
                 var entries = new List<ProjectileEntry>();
-                var pending = new List<(CosmeticInfoV2 info, string rightId, string leftId)>();
-
-                foreach (var cosmeticRef in allCosmeticsArraySO.sturdyAssetRefs)
+                var asset = CosmeticsController.instance.v2_allCosmeticsInfoAssetRef.Asset as AllCosmeticsArraySO;
+                IEnumerable<CosmeticInfoV2> cosmetics = asset != null
+                    ? asset.sturdyAssetRefs.Where(item => item.obj != null).Select(item => item.obj.info)
+                    : CosmeticsController.instance.v2_allCosmetics;
+                if (cosmetics == null) return;
+                foreach (CosmeticInfoV2 info in cosmetics)
                 {
-                    CosmeticInfoV2 info = cosmeticRef.obj.info;
-                    if (!info.isThrowable)
+                    if (!info.isThrowable || entries.Exists(entry => entry.ThrowableIndex == info.throwableIndex))
                         continue;
-                    if (pending.Exists(p => p.info.throwableIndex == info.throwableIndex))
+                    string name = CleanProjectileName(info.displayName);
+                    if (name == "Firework Mortar")
                         continue;
-
-                    bool hasRight = CosmeticsV2Spawner_Dirty.GetPlayfabIdFromThrowableIndex(false, info.throwableIndex, out string rightId);
-                    bool hasLeft = CosmeticsV2Spawner_Dirty.GetPlayfabIdFromThrowableIndex(true, info.throwableIndex, out string leftId);
-                    if (!hasRight && !hasLeft)
-                        continue;
-
-                    pending.Add((info, hasRight ? rightId : null, hasLeft ? leftId : null));
+                    entries.Add(new ProjectileEntry { Name = name, ThrowableIndex = info.throwableIndex, CosmeticId = info.playFabID });
                 }
-
-                int remaining = pending.Count;
-                if (remaining == 0)
+                if (entries.Count == 0)
                 {
-                    _cachedProjectileEntries = entries;
-                    _isBuildingCache = false;
-                    onComplete?.Invoke();
+                    _nextCacheAttempt = Time.unscaledTime + 1f;
                     return;
                 }
-
-                void Finish()
-                {
-                    if (--remaining == 0)
-                    {
-                        _cachedProjectileEntries = entries;
-                        _isBuildingCache = false;
-                        ButtonInfo projectileButton = Buttons.GetIndex("Change Projectile");
-                        projectileButton?.onValueChanged?.Invoke();
-                        onComplete?.Invoke();
-                    }
-                }
-
-                async void ResolveThrowable((CosmeticInfoV2 info, string rightId, string leftId) item)
-                {
-                    try
-                    {
-                        string name = CleanProjectileName(item.info.displayName);
-                        if (name.Equals("Firework Mortar"))
-                        {
-                            Finish();
-                            return;
-                        }
-
-                        var registry = VRRig.LocalRig?.cosmeticsObjectRegistry;
-                        if (registry == null)
-                        {
-                            LogManager.LogError("CosmeticsItemRegistry on our rig is null??");
-                            Finish();
-                            return;
-                        }
-
-                        if (item.leftId != null) registry.Cosmetic(item.leftId);
-                        if (item.rightId != null) registry.Cosmetic(item.rightId);
-
-                        float start = Time.time;
-                        SnowballThrowable left = null, right = null;
-
-                        bool Satisfied() => (item.leftId == null || left != null) && (item.rightId == null || right != null);
-
-                        while (!Satisfied())
-                        {
-                            left = FindByThrowableIndex(SnowballMaker.leftHandInstance, item.info.throwableIndex);
-                            right = FindByThrowableIndex(SnowballMaker.rightHandInstance, item.info.throwableIndex);
-
-                            if (Satisfied())
-                                break;
-
-                            if (Time.time > start + 5f)
-                            {
-                                LogManager.LogError($"Throwable (index: {item.info.throwableIndex}, right id: {item.rightId}, left id: {item.leftId}) took too long to spawn, so I'm just gonna go");
-                                break;
-                            }
-
-                            await Awaitable.EndOfFrameAsync(default);
-                        }
-
-                        if (left != null) left.velocityEstimator = SnowballMaker.leftHandInstance?.velocityEstimator;
-                        if (right != null) right.velocityEstimator = SnowballMaker.rightHandInstance?.velocityEstimator;
-
-                        entries.Add(new ProjectileEntry
-                        {
-                            Name = name,
-                            ThrowableLeft = left,
-                            ThrowableRight = right
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                        LogManager.LogError($"Trying to resolve throwable failed (index: {item.info.throwableIndex}, right id: {item.rightId}, left id: {item.leftId}): {ex}");
-                    }
-                    finally
-                    {
-                        Finish();
-                    }
-                }
-
-                foreach (var item in pending)
-                    ResolveThrowable(item);
+                entries.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+                _cachedProjectileEntries = entries;
+                LogManager.Log($"Loaded {entries.Count} projectile choices");
+                if (Buttons.buttons != null) Buttons.GetIndex("Change Projectile")?.onValueChanged?.Invoke();
+                onComplete?.Invoke();
             }
             catch (Exception ex)
             {
                 LogManager.LogError($"BuildProjectileCache failed: {ex}");
-                _isBuildingCache = false;
+                _nextCacheAttempt = Time.unscaledTime + 5f;
             }
         }
 
         private static SnowballThrowable FindByThrowableIndex(SnowballMaker maker, int throwableIndex)
         {
-            if (maker == null)
+            if (maker == null || maker.snowballs == null)
                 return null;
             foreach (var sb in maker.snowballs)
             {
@@ -207,17 +170,26 @@ namespace Poison.Mods
 
         public static IReadOnlyList<ProjectileEntry> GetAll()
         {
-            if (_cachedProjectileEntries == null && !_isBuildingCache)
+            if (_cachedProjectileEntries == null)
                 BuildProjectileCache();
             return (IReadOnlyList<ProjectileEntry>)_cachedProjectileEntries ?? Array.Empty<ProjectileEntry>();
         }
 
-        public static ProjectileEntry GetPreferredProjectileEntry() =>
-            GetAll()[ProjectileMode];
+        public static ProjectileEntry GetPreferredProjectileEntry()
+        {
+            IReadOnlyList<ProjectileEntry> all = GetAll();
+            if (all.Count == 0)
+                return null;
+            int index = ProjectileMode;
+            if (index < 0 || index >= all.Count)
+                _projMode = index = 0;
+            all[index].Resolve();
+            return all[index];
+        }
         public static ProjectileEntry GetGrowingSnowballProjectileEntry()
         {
             ProjectileEntry entry = GetPreferredProjectileEntry();
-            if (entry.Throwable is GrowingSnowballThrowable)
+            if (entry?.Throwable is GrowingSnowballThrowable)
                 return entry;
             return FindProjectile("Growing Snowball");
         }
@@ -374,13 +346,10 @@ namespace Poison.Mods
             }
             else
             {
-                if (projDebounceType > 0f)
-                {
-                    projDebounce = Time.time + projDebounceType;
-                    return true;
-                }
-                else
+                if (Time.time < projDebounce)
                     return false;
+                projDebounce = Time.time + projDebounceType;
+                return true;
             }
         }
         public static bool clientSided;
@@ -388,6 +357,17 @@ namespace Poison.Mods
         {
             try
             {
+                SnowballThrowable Throwable = projectile?.Throwable;
+                if (Throwable == null)
+                {
+                    if (Time.unscaledTime >= nextLaunchWarning)
+                    {
+                        nextLaunchWarning = Time.unscaledTime + 10f;
+                        LogManager.LogWarning($"Projectile '{projectile?.Name}' is waiting for its prefab (prepared={CosmeticsV2Spawner_Dirty.isPrepared}, left={SnowballMaker.leftHandInstance?.snowballs?.Length ?? 0}, right={SnowballMaker.rightHandInstance?.snowballs?.Length ?? 0})");
+                    }
+                    return;
+                }
+
                 projectileFrameSent = Time.frameCount;
                 ProjectileWatcherCoroutine ??= CoroutineManager.instance.StartCoroutine(ProjectileWatcher());
 
@@ -414,7 +394,6 @@ namespace Poison.Mods
                     if (!color.HasValue)
                         color = CalculateProjectileColor();
 
-                    SnowballThrowable Throwable = projectile.Throwable ?? throw new Exception("Throwable is null");
                     VRRig.LocalRig.SetThrowableProjectileColor(true, color.Value);
                     UpdateNetworkedProjectile(projectile.ThrowableIndex, targetProjectileIndex, hand);
 
@@ -424,12 +403,12 @@ namespace Poison.Mods
                     int index = GetProjectileIncrement(position, velocity, Throwable.transform.lossyScale.x);
                     if (Throwable is GrowingSnowballThrowable)
                     {
-                        GrowingSnowballThrowable GrowingSnowball = GetThrowableByHand(hand) as GrowingSnowballThrowable ?? throw new Exception("GrowingSnowball Throwable is null");
+                        GrowingSnowballThrowable GrowingSnowball = (GrowingSnowballThrowable)Throwable;
                         if (growingSnowballSize == -1)
                             growingSnowballSize = GrowingSnowball.MaxSizeLevel;
                         // friendSided ? Math.Max(SnowballSize, friendProjectileScale) : SnowballSize;
 
-                        if (NetworkSystem.Instance.InRoom || friendSided)
+                        if ((NetworkSystem.Instance.InRoom && !clientSided) || friendSided)
                         {
                             if (friendSided)
                             {
@@ -518,10 +497,6 @@ namespace Poison.Mods
                             RPCProtection();
                         }
                     }
-                }
-                else if (NetworkSystem.Instance.InRoom)
-                {
-                    LogManager.Log($"Projectile send rejected by CanCallNow (game CallLimiter). projDebounceType={projDebounceType} (-1 = use game limiter, >0 = custom debounce).");
                 }
             }
             catch (Exception e) { LogManager.LogError($"Projectile error: {e.Message}. Full exception:\n{e}"); }

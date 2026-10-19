@@ -579,7 +579,7 @@ namespace Poison.Menu
                 Watches.ForEach(watch => watch.Update());
 
                 // Load projectiles
-                if (CosmeticsV2Spawner_Dirty.isPrepared && Projectiles._cachedProjectileEntries == null)
+                if (Projectiles._cachedProjectileEntries == null)
                     Projectiles.BuildProjectileCache();
 
                 // Fix for disorganized menu
