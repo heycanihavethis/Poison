@@ -150,6 +150,10 @@ namespace Poison.Mods
                 ColorChanger outlineColorChanger = gameObject.AddComponent<ColorChanger>();
                 outlineColorChanger.colors = buttonColors[0];
             }
+
+            foreach (Collider collider in platform.GetComponentsInChildren<Collider>(true))
+                collider.gameObject.layer = PlatformLayer;
+
             return platform;
         }
 
@@ -277,6 +281,7 @@ namespace Poison.Mods
                 else
                 {
                     platform = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    platform.layer = PlatformLayer;
                     platform.GetComponent<Renderer>().material.color = backgroundColor.GetCurrentColor();
                     platform.transform.localScale = new Vector3(0.025f, 0.3f, 0.4f) * (scaleWithPlayer ? GTPlayer.Instance.scale : 1f);
                     platform.AddComponent<GorillaSurfaceOverride>().overrideIndex = 61;
@@ -2694,6 +2699,7 @@ namespace Poison.Mods
             playspace.enabled = false;
         }
 
+        private static int PlatformLayer => LayerMask.NameToLayer("BuilderProp");
         private static readonly HashSet<string> clipOwners = new HashSet<string>();
         private static GTPlayer clipPlayer;
         private static LayerMask clipLayers;
@@ -2732,7 +2738,7 @@ namespace Poison.Mods
                 clipHeadWasTrigger = clipHeadCollider.isTrigger;
                 clipHeadCollider.isTrigger = true;
             }
-            clipPlayer.locomotionEnabledLayers = 0;
+            clipPlayer.locomotionEnabledLayers = 1 << PlatformLayer;
         }
 
         public static void DisableNoclip()
