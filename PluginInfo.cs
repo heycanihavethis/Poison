@@ -26,8 +26,8 @@ namespace Poison
         public const string GUID = "org.Poison.gorillatag.Poisonmenu";
         public const string Name = "Poison Menu";
         public const string Description = "Community powered mod menu for Gorilla Tag.";
-        public const string BuildTimestamp = "2026-10-19T17:04:32Z";
-        public const string Version = "5.2.0";
+        public const string BuildTimestamp = "2026-10-20T21:35:55Z";
+        public const string Version = "5.1.5";
 
         public const string BaseDirectory =
 #if LEGAL || LEGAL_DEBUG
