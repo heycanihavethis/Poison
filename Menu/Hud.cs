@@ -97,6 +97,7 @@ namespace Poison.Menu
         {
             public RectTransform rect;
             public RectTransform clip;
+            public string category;
             public Image fill;
             public TMP_Text label;
             public Color baseColor;
@@ -129,6 +130,7 @@ namespace Poison.Menu
         bool placed;
         bool visible;
         bool open;
+        bool categoryChanged;
         float openAmount;
         bool cursorHeld;
         bool cursorVisible;
@@ -177,6 +179,7 @@ namespace Poison.Menu
         void Awake()
         {
             Instance = this;
+            Buttons.OnCategoryChanged += Refresh;
         }
 
         void OnDisable()
@@ -187,6 +190,7 @@ namespace Poison.Menu
 
         void OnDestroy()
         {
+            Buttons.OnCategoryChanged -= Refresh;
             if (Instance == this) Instance = null;
             if (overlayMaterial != null) Destroy(overlayMaterial);
             if (pointer != null) Destroy(pointer);
@@ -249,7 +253,7 @@ namespace Poison.Menu
 
         public void Search() => SetOpen(true);
         public void Edit() => SetOpen(true);
-        public void Refresh() { }
+        public void Refresh() => categoryChanged = true;
         public void Recenter() => placed = false;
 
         void Build()
@@ -343,10 +347,10 @@ namespace Poison.Menu
             for (int i = 0; i < Math.Min(names.Length, groups.Length); i++)
             {
                 string name = names[i];
-                if (string.IsNullOrEmpty(name) || !CanSee(name) || groups[i] == null) continue;
+                if (string.IsNullOrEmpty(name) || name == "Temporary Category" || !CanSee(name) || groups[i] == null) continue;
                 if ((Main.hideSettings && name.Contains("Settings")) || (Main.hideMacros && name.Contains("Macro"))) continue;
                 foreach (ButtonInfo button in groups[i])
-                    if (button != null && button.enabled && !button.label && seen.Add(button)) list.Add(button);
+                    if (button != null && button.enabled && button.isTogglable && !button.label && !button.hideFromArraylist && seen.Add(button)) list.Add(button);
             }
             list.Sort((a, b) => string.Compare(a.overlapText ?? a.buttonText, b.overlapText ?? b.buttonText, StringComparison.OrdinalIgnoreCase));
             return list.ToArray();
@@ -516,6 +520,73 @@ namespace Poison.Menu
             RebuildSidebar();
         }
 
+        static bool IsSettingsCategory(ButtonInfo button) =>
+            !button.isTogglable && !button.label && !button.incremental && button.buttonText != "Exit Settings" &&
+            Array.IndexOf(Buttons.buttons[Buttons.GetCategory("Settings")], button) >= 0;
+
+        void ToggleSettingsCategory(ButtonInfo button)
+        {
+            if (GetState(button.buttonText).openWindow) ToggleCategory(button.buttonText);
+            else Main.Toggle(button, true, true);
+        }
+
+        Color CategoryColor(string name, bool hover)
+        {
+            if (GetState(name).openWindow)
+                return Alpha(themeStamp.accent, 0.22f * themeStamp.accentAmount + (hover ? 0.08f : 0f));
+            return hover ? Alpha(themeStamp.accent, 0.08f) : new Color(0, 0, 0, 0);
+        }
+
+        void RefreshCategoryRows()
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                Item item = items[i];
+                if (item.category == null) continue;
+                item.baseColor = CategoryColor(item.category, false);
+                item.hoverColor = CategoryColor(item.category, true);
+                if (item.fill != null) item.fill.color = item.hovered ? item.hoverColor : item.baseColor;
+                if (item.label != null) item.label.color = GetState(item.category).openWindow ? themeStamp.accent : themeStamp.bright;
+                items[i] = item;
+            }
+        }
+
+        void ShowCategory()
+        {
+            string name = Buttons.CurrentCategoryName;
+            if (name == "Main" || !CanSee(name)) return;
+
+            State state = GetState(name);
+            state.openWindow = true;
+            state.collapsed = false;
+            if (!state.placed) AssignSlot(name);
+
+            ButtonInfo[] group = Buttons.buttons[Buttons.CurrentCategoryIndex];
+            int index = windows.FindIndex(window => window.state == state);
+            if (index >= 0 && windows[index].group == group)
+                windows[index].collapseTarget = 0f;
+            else
+            {
+                if (index >= 0)
+                {
+                    Window previous = windows[index];
+                    Transform old = previous.root != null ? previous.root.transform : null;
+                    for (int i = items.Count - 1; i >= 0; i--)
+                        if (items[i].rect == null || (old != null && items[i].rect.IsChildOf(old))) items.RemoveAt(i);
+                    for (int i = titles.Count - 1; i >= 0; i--)
+                        if (titles[i].window == previous) titles.RemoveAt(i);
+                    if (previous.root != null) Destroy(previous.root);
+                }
+
+                Window replacement = BuildWindow(name, group, state);
+                replacement.yaw = state.yaw;
+                replacement.pitch = state.pitch;
+                if (index >= 0) windows[index] = replacement;
+                else windows.Add(replacement);
+            }
+            RebuildSidebar();
+        }
+
         void RebuildSidebar()
         {
             if (sidebar == null) return;
@@ -538,6 +609,7 @@ namespace Poison.Menu
             else windows.Insert(0, next);
             sidebar = next;
             ApplyOverlay();
+            RefreshCategoryRows();
         }
 
         struct Theme
@@ -841,6 +913,7 @@ namespace Poison.Menu
         {
             Theme theme = CurrentTheme();
             Window window = BuildShell(title, false, state, group != null ? group.Length : 0, theme.rowHeight, theme, out RectTransform content);
+            window.group = group;
             float rowHeight = theme.rowHeight;
 
             float buttonSize = TitleHeight - 8f;
@@ -943,7 +1016,7 @@ namespace Poison.Menu
             return window;
         }
 
-        void BuildSidebarRow(Theme theme, string name, RectTransform content, float y, float rowHeight, RectTransform clip)
+        void BuildSidebarRow(Theme theme, string name, RectTransform content, float y, float rowHeight, RectTransform clip, Action action = null)
         {
             GameObject rowObject = NewObject("row", content);
             RectTransform rect = rowObject.GetComponent<RectTransform>();
@@ -965,16 +1038,23 @@ namespace Poison.Menu
             {
                 rect = rect,
                 clip = clip,
+                category = name,
                 fill = fill,
                 label = label,
                 baseColor = baseColor,
                 hoverColor = on ? Alpha(theme.accent, 0.22f * theme.accentAmount + 0.08f) : Alpha(theme.accent, 0.08f),
-                act = () => ToggleCategory(name)
+                act = action ?? (() => ToggleCategory(name))
             });
         }
 
         void BuildRow(Theme theme, ButtonInfo button, RectTransform content, float y, float rowHeight, RectTransform clip)
         {
+            if (IsSettingsCategory(button))
+            {
+                BuildSidebarRow(theme, button.buttonText, content, y, rowHeight, clip, () => ToggleSettingsCategory(button));
+                return;
+            }
+
             GameObject rowObject = NewObject("row", content);
             RectTransform rect = rowObject.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0.5f, 1f); rect.anchorMax = new Vector2(0.5f, 1f); rect.pivot = new Vector2(0.5f, 1f);
@@ -1076,7 +1156,7 @@ namespace Poison.Menu
                     fill = inner,
                     baseColor = inner.color,
                     hoverColor = Alpha(theme.accent, 0.18f),
-                    act = () => Main.ToggleIncremental(button.buttonText, false, true, true)
+                    act = () => { Main.ToggleIncremental(button.buttonText, false, true, true); label.text = Text(button); }
                 });
                 items.Add(new Item
                 {
@@ -1085,7 +1165,7 @@ namespace Poison.Menu
                     fill = inner,
                     baseColor = inner.color,
                     hoverColor = Alpha(theme.accent, 0.18f),
-                    act = () => Main.ToggleIncremental(button.buttonText, true, true, true)
+                    act = () => { Main.ToggleIncremental(button.buttonText, true, true, true); label.text = Text(button); }
                 });
                 return;
             }
@@ -1712,22 +1792,14 @@ namespace Poison.Menu
 
         bool TriggerPressed()
         {
-            ControllerInputPoller poll = ControllerInputPoller.instance;
-            if (poll == null) return false;
-            float value = RightHand ? poll.rightControllerIndexFloat : poll.leftControllerIndexFloat;
+            float value = RightHand ? Main.rightTrigger : Main.leftTrigger;
             bool held = value > 0.5f;
             bool previous = triggerWas > 0.5f;
             triggerWas = held ? 1f : 0f;
             return held && !previous;
         }
 
-        bool GripHeld()
-        {
-            ControllerInputPoller poll = ControllerInputPoller.instance;
-            if (poll == null) return false;
-            float value = RightHand ? poll.rightControllerGripFloat : poll.leftControllerGripFloat;
-            return value > 0.5f;
-        }
+        bool GripHeld() => RightHand ? Main.rightGrab : Main.leftGrab;
 
         bool GripPressed()
         {
@@ -1862,7 +1934,8 @@ namespace Poison.Menu
                     {
                         Image fill = item.fill;
                         Color to = item.baseColor;
-                        Animate(0.10f, t => { if (fill != null) fill.color = Color.Lerp(fill.color, to, t); });
+                        string category = item.category;
+                        Animate(0.10f, t => { if (fill != null) fill.color = Color.Lerp(fill.color, category == null ? to : CategoryColor(category, false), t); });
                     }
                     items[i] = item;
                 }
@@ -1915,7 +1988,8 @@ namespace Poison.Menu
                     Color from = item.fill.color;
                     Color to = nowHover ? item.hoverColor : item.baseColor;
                     Image fill = item.fill;
-                    Animate(0.10f, t => { if (fill != null) fill.color = Color.Lerp(from, to, t); });
+                    string category = item.category;
+                    Animate(0.10f, t => { if (fill != null) fill.color = Color.Lerp(from, category == null ? to : CategoryColor(category, nowHover), t); });
                 }
                 items[i] = item;
             }
@@ -2058,6 +2132,12 @@ namespace Poison.Menu
                 return;
             }
             if (root == null) return;
+
+            if (categoryChanged)
+            {
+                categoryChanged = false;
+                ShowCategory();
+            }
 
             fpsTime += Time.unscaledDeltaTime;
             fpsCount++;
