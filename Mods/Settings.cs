@@ -777,7 +777,10 @@ namespace Poison.Mods
         }
         public static void CategorySettings()
         {
-            List<ButtonInfo> buttons = new List<ButtonInfo> { new ButtonInfo { buttonText = "Exit Menu Settings", method = () => { Buttons.CurrentCategoryName = "Settings"; Buttons.buttons[Buttons.GetCategory("Temporary Category")] = Array.Empty<ButtonInfo>(); }, isTogglable = false, toolTip = "Returns you back to the settings menu.", legal = true } };
+            int category = Buttons.GetCategory("Category Settings");
+            if (category < 0) category = Buttons.AddCategory("Category Settings");
+
+            List<ButtonInfo> buttons = new List<ButtonInfo> { new ButtonInfo { buttonText = "Exit Category Settings", method = () => Buttons.CurrentCategoryName = "Settings", isTogglable = false, toolTip = "Returns you back to the settings menu.", legal = true } };
 
             foreach (var button in Buttons.buttons[Buttons.GetCategory("Main")])
             {
@@ -798,8 +801,8 @@ namespace Poison.Mods
                 });
             }
 
-            Buttons.buttons[Buttons.GetCategory("Temporary Category")] = buttons.ToArray();
-            Buttons.CurrentCategoryName = "Temporary Category";
+            Buttons.buttons[category] = buttons.ToArray();
+            Buttons.CurrentCategoryName = "Category Settings";
         }
 
         public static void RightHand()
