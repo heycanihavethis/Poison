@@ -347,6 +347,8 @@ namespace Poison.Menu
                 ButtonHelper.Create("Change Wall Walk Strength", () => Movement.WallWalkStrengthNames, Movement.wallWalkStrengthIndex, Movement.ApplyWallWalkStrength, "Changes the strength of the wall walk mod."),
                 ButtonHelper.Create("Change Pull Mod Power", () => Movement.PullModPowerNames, Movement.pullPowerInt, Movement.ApplyPullModPower, "Changes the power of the pull mod."),
                 ButtonHelper.Create("Change Prediction Amount", () => Movement.PredictionAmountNames, Movement.predInt, Movement.ApplyPredictionAmount, "Changes the power of the predictions."),
+                ButtonHelper.Create("Change Weeping Angel Mode", () => Movement.WeepingAngelModeNames, Movement.weepingAngelMode, Movement.ApplyWeepingAngelMode, "Changes who freezes your rig with Weeping Angel. Specific Player uses a gun to pick them."),
+                new ButtonInfo { buttonText = "Weeping Angel Chase", toolTip = "Makes Weeping Angel move your rig toward the closest player, or your selected player, whenever nobody is looking. Uses your fly speed."},
                 ButtonHelper.CreateNumeric("Change Timer Speed", 1, 50, Movement.timerPowerIndex, Movement.ApplyTimerSpeed, v => (v / 10f).ToString(), "Changes the speed of the timer mod."),
                 ButtonHelper.Create("cdSpeed", () => Movement.DriveSpeedNames, Movement.driveInt, Movement.ApplyDriveSpeed, "Changes the speed of the drive mod.", overlapText: "Change Drive Speed"),
                 ButtonHelper.Create("Change Fast Ropes Speed", () => Movement.FastRopesSpeedNames, Movement.fastRopesInt, Movement.ApplyFastRopesSpeed, "Changes the speed of the Fast Ropes mod."),
@@ -753,6 +755,7 @@ namespace Poison.Menu
 
                 new ButtonInfo { buttonText = "Ghost <color=grey>[</color><color=green>A</color><color=grey>]</color>", method = Movement.Ghost, disableMethod = Movement.EnableRig, toolTip = "Keeps your rig still when holding <color=green>A</color>."},
                 new ButtonInfo { buttonText = "Invisible <color=grey>[</color><color=green>B</color><color=grey>]</color>", method = Movement.Invisible, disableMethod = Movement.EnableRig, toolTip = "Makes you go invisible when holding <color=green>B</color>."},
+                new ButtonInfo { buttonText = "Weeping Angel", method = Movement.WeepingAngel, disableMethod = Movement.DisableWeepingAngel, toolTip = "Freezes your rig while it is being looked at. Pick who can freeze you with Change Weeping Angel Mode in Movement Settings."},
 
                 new ButtonInfo { buttonText = "Rig Gun", method = Movement.RigGun, toolTip = "Moves your rig to wherever your hand desires."},
                 new ButtonInfo { buttonText = "Grab Rig <color=grey>[</color><color=green>G</color><color=grey>]</color>", method = Movement.GrabRig, toolTip = "Lets you grab your rig when holding <color=green>grip</color>."},

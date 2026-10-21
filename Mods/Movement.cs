@@ -2839,6 +2839,113 @@ namespace Poison.Mods
             ghostException = false;
         }
 
+        public static int weepingAngelMode;
+        public static readonly string[] WeepingAngelModeNames = { "Specific Player", "Anyone" };
+        public static void ApplyWeepingAngelMode(int index)
+        {
+            weepingAngelMode = index;
+            weepingAngelPlayer = null;
+        }
+
+        private static NetPlayer weepingAngelPlayer;
+        private static bool weepingAngelFrozen;
+        public static void WeepingAngel()
+        {
+            VRRig target = null;
+            if (weepingAngelMode == 0)
+            {
+                if (GetGunInput(false))
+                {
+                    var GunData = RenderGun();
+                    RaycastHit Ray = GunData.Ray;
+
+                    if (GetGunInput(true) && Ray.collider != null)
+                    {
+                        VRRig gunTarget = Ray.collider.GetComponentInParent<VRRig>();
+                        NetPlayer gunPlayer = gunTarget && !gunTarget.IsLocal() ? GetPlayerFromVRRig(gunTarget) : null;
+                        if (gunPlayer != null && gunPlayer != weepingAngelPlayer)
+                        {
+                            weepingAngelPlayer = gunPlayer;
+                            NotificationManager.SendNotification($"<color=grey>[</color><color=green>WEEPING ANGEL</color><color=grey>]</color> Only {gunPlayer.NickName} can freeze you now.");
+                        }
+                    }
+                }
+
+                target = weepingAngelPlayer == null ? null : GetVRRigFromPlayer(weepingAngelPlayer);
+                if (target == null) weepingAngelPlayer = null;
+            }
+
+            bool observed = weepingAngelMode == 0
+                ? target != null && IsWatching(target)
+                : VRRigExtensions.ActiveRigs.Any(rig => !rig.IsLocal() && IsWatching(rig));
+
+            VRRig prey = !observed && Buttons.GetIndex("Weeping Angel Chase").enabled
+                ? weepingAngelMode == 0 ? target : ClosestRig()
+                : null;
+
+            bool detached = observed || prey != null;
+            if (detached != weepingAngelFrozen)
+            {
+                weepingAngelFrozen = detached;
+                VRRig.LocalRig.enabled = !detached;
+            }
+
+            if (prey != null) ChasePrey(prey);
+        }
+
+        private static VRRig ClosestRig()
+        {
+            VRRig closest = null;
+            float best = float.MaxValue;
+            foreach (VRRig rig in VRRigExtensions.ActiveRigs)
+            {
+                if (rig.IsLocal()) continue;
+                float distance = Vector3.Distance(rig.transform.position, VRRig.LocalRig.transform.position);
+                if (distance >= best) continue;
+                best = distance;
+                closest = rig;
+            }
+            return closest;
+        }
+
+        private static void ChasePrey(VRRig prey)
+        {
+            Transform rig = VRRig.LocalRig.transform;
+            Vector3 goal = prey.transform.position;
+            float distance = Vector3.Distance(rig.position, goal);
+            if (distance > 1f)
+                rig.position = Vector3.MoveTowards(rig.position, goal, Mathf.Min(FlySpeed / 2f * Time.deltaTime, distance - 1f));
+
+            Vector3 facing = goal - rig.position;
+            facing.y = 0f;
+            if (facing.sqrMagnitude > 0.0001f) rig.rotation = Quaternion.LookRotation(facing);
+
+            VRRig.LocalRig.head.rigTarget.transform.rotation = rig.rotation;
+            VRRig.LocalRig.leftHand.rigTarget.transform.position = rig.position + rig.forward * 0.5f - rig.right * 0.3f + rig.up * 0.2f;
+            VRRig.LocalRig.rightHand.rigTarget.transform.position = rig.position + rig.forward * 0.5f + rig.right * 0.3f + rig.up * 0.2f;
+            VRRig.LocalRig.leftHand.rigTarget.transform.rotation = rig.rotation;
+            VRRig.LocalRig.rightHand.rigTarget.transform.rotation = rig.rotation;
+            FixRigHandRotation();
+        }
+
+        private static bool IsWatching(VRRig rig)
+        {
+            Transform eyes = rig.headMesh.transform;
+            Vector3 head = VRRig.LocalRig.headMesh.transform.position;
+            Vector3 direction = head - eyes.position;
+            if (Vector3.Angle(eyes.forward, direction) > 45f) return false;
+
+            Vector3 offset = direction.normalized * Mathf.Min(0.25f, direction.magnitude * 0.25f);
+            return !Physics.Linecast(eyes.position + offset, head - offset, GTPlayer.LocomotionEnabledLayers);
+        }
+
+        public static void DisableWeepingAngel()
+        {
+            if (weepingAngelFrozen) EnableRig();
+            weepingAngelFrozen = false;
+            weepingAngelPlayer = null;
+        }
+
         public static void RigGun()
         {
             if (GetGunInput(false))
