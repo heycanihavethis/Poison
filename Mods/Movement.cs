@@ -398,7 +398,10 @@ namespace Poison.Mods
         public static void Fly()
         {
             if (rightPrimary)
-                GorillaTagger.Instance.rigidbody.linearVelocity = GorillaTagger.Instance.headCollider.transform.forward * FlySpeed;
+            {
+                GTPlayer.Instance.transform.position += GorillaTagger.Instance.headCollider.transform.forward * (Time.deltaTime * FlySpeed);
+                GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
+            }
         }
 
         public static void TriggerFly()
