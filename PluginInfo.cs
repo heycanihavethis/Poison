@@ -37,7 +37,7 @@ namespace Poison
 #endif
         public const string ClientResourcePath = "PoisonMenu.Resources.Client";
         public const string ServerResourcePath = "https://raw.githubusercontent.com/heycanihavethis/Poison/master/Resources/Server";
-        public const string ServerAPI = "https://menu.poisons.men";
+        public const string ServerAPI = "https://menu.shibagt.com";
         public const string Logo = @"um";
 
 #if DEBUG || LEGAL_DEBUG
