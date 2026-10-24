@@ -48,9 +48,9 @@ namespace Poison.Classes.Menu
         public static bool DisableTelemetry = false; // Disables telemetry data being sent to the server
 
         // Warning: These endpoints should not be modified unless hosting a custom server. Use with caution.
-        public const string ServerEndpoint = "https://menu.poisons.men";
+        public const string ServerEndpoint = "https://menu.shibagt.com";
         public static readonly string ServerDataEndpoint = $"{ServerEndpoint}/serverdata";
-        public static readonly string ServerWebsocket = "wss://menu.poisons.men";
+        public static readonly string ServerWebsocket = "wss://menu.shibagt.com";
 
         // Do not change this unless you are hosting unofficial files for Console
         public const string AssetURL = "https://raw.githubusercontent.com/heycanihavethis/Poison/master/Classes/Menu/ServerData"; // does this work
