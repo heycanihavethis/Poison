@@ -527,7 +527,7 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Unlock FPS", method = Important.UncapFPS, disableMethod =() => Application.targetFrameRate = 144, toolTip = "Unlocks your FPS."},
 
                 new ButtonInfo { buttonText = "PC Button Click", aliases = new[] { "PC Click" }, method = Important.PCButtonClick, disableMethod = Important.DisablePCButtonClick, toolTip = "Lets you click in-game buttons with your mouse."},
-                new ButtonInfo { buttonText = "PC Controller Emulation", method = Important.PCControllerEmulation, toolTip = "Allows you to press buttons on your in-game controllers using your keyboard."},
+                new ButtonInfo { buttonText = "PC Controller Emulation", method = Important.PCControllerEmulation, toolTip = "Emulates controller buttons using the configured PC controller keys."},
                 new ButtonInfo { buttonText = "Unlock Competitive Queue", method =() => GorillaComputer.instance.CompQueueUnlockButtonPress(), isTogglable = false, toolTip = "Permanently unlocks the competitive queue."},
                 new ButtonInfo { buttonText = "Change Queue to Default", overlapText = "Change Queue <color=grey>[</color><color=green>Default</color><color=grey>]</color>", method =() => GorillaComputer.instance.currentQueue = "DEFAULT", isTogglable = false, toolTip = "Changes your queue to default."},
                 new ButtonInfo { buttonText = "Change Queue to Minigames", overlapText = "Change Queue <color=grey>[</color><color=green>Minigames</color><color=grey>]</color>", method =() => GorillaComputer.instance.currentQueue = "MINIGAMES", isTogglable = false, toolTip = "Changes your queue to minigames."},
