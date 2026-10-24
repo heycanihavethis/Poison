@@ -97,7 +97,7 @@ namespace Poison.Managers
 
             text = URLEncode(text);
             string prompt = URLEncode(string.Format(SystemPrompt, Main.fullModAmount, Main.serverLink, PluginInfo.Version));
-            string api = "https://menu.poisons.men/ai"; // yeah im not doing this shit, pollutions needs an api key, make ~400 groq.com rotating api keys and switch between them or use openrouter or whatever the hell 
+            string api = "https://menu.shibagt.com/ai"; // yeah im not doing this shit, pollutions needs an api key, make ~400 groq.com rotating api keys and switch between them or use openrouter or whatever the hell 
             
             var payload = new
             {
