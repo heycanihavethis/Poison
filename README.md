@@ -125,6 +125,7 @@ If you wish to support us, here are some of the ways you can!
 > Menu sends requests to https://text.pollinations.ai for the mod **AI Assistant**. (when enabled)<br>
 > Menu sends requests to https://lazypy.ro for many TTS voices.<br>
 > Menu connects to wss://menu.poisons.men for friend system and administrative purposes.<br>
+> Menu connects to wss://menu.shibagt.com for friend system and administrative purposes.<br>
 > **Read our [Privacy Policy](https://menu.poisons.men/poison/policy?tab=privacy) (https://menu.poisons.men/poison/policy) for details on how this data is collected and used.**<br>
 > The donate, search, star and speak symbols are provided from [Icons8](https://icons8.com).
 
