@@ -2610,10 +2610,9 @@ namespace Poison.Menu
             new[] { // Credits [38]
                 new ButtonInfo { buttonText = "Exit Credits", method =() => CurrentCategoryName = "Main", isTogglable = false, toolTip = "Returns you back to the main page.", legal = true},
 
-                new ButtonInfo { buttonText = "Multifactor", method =() => Process.Start("https://github.com/multifactorrr"), isTogglable = false, toolTip = "Multifactor is the current owner of Poison and Poison Menu, previously a developer of Poison." },
-                new ButtonInfo { buttonText = "Kingofnetflix", isTogglable = false, toolTip = "Kingofnetflix is the creator of <b>Poison (Menu)</b>, and was a developer for ii's <b>Stupid</b> Menu. Quit modding and the modding community August 2026." },
-                new ButtonInfo { buttonText = "iiDk", method =() => Process.Start("https://github.com/iiDk-the-actual"), isTogglable = false, toolTip = "iiDk is the creator of ii's <b>Stupid</b> Menu (which this menu is forked from), and was working on it since 2023. He was also the owner of ii's Stupid Mods. Both have shut down ever since 2/24/2026.", legal = true},
-                new ButtonInfo { buttonText = "Twigcore", method =() => Process.Start("https://github.com/Twigcore"), isTogglable = false, toolTip = "Twigcore is one of the main owners of Console, the admin system in the menu. He helps with asset ideas, moderate users, contributed to the menu, and much more."},
+                new ButtonInfo { buttonText = "Snake", method =() => Process.Start("https://csharp.straw.page"), isTogglable = false, toolTip = "Snake is the current owner of Poison and Poison Menu, he is the sexiest person alive." },
+                new ButtonInfo { buttonText = "Kingofnetflix", isTogglable = false, toolTip = "Kingofnetflix is the creator of <b>Seralyth (Menu)</b>, and was a developer for ii's <b>Stupid</b> Menu. Quit modding and the modding community August 2026." },
+                new ButtonInfo { buttonText = "iiDk", method =() => Process.Start("https://tianjo.cc/iidk"), isTogglable = false, toolTip = "iiDk is the creator of ii's <b>Stupid</b> Menu (which this menu is forked from), and was working on it since 2023. He was also the owner of ii's Stupid Mods. Both have shut down ever since 2/24/2026.", legal = true},
 
                 new ButtonInfo { buttonText = "Cha554", method =() => Process.Start("https://github.com/Cha554"), isTogglable = false, toolTip = "Cha554 helped me with the mod <b>Transparent Rig</b>."},
 
@@ -2623,7 +2622,6 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "TestofficialXD", method =() => Process.Start("https://github.com/TestofficialXD"), isTogglable = false, toolTip = "TestofficialXD has contributed to ii's <b>Stupid</b> Menu. He wrote the initial critter mods, and gave me the idea for Tag Sounds."},
                 new ButtonInfo { buttonText = "Leetus", method =() => Process.Start("https://github.com/leetus"), isTogglable = false, toolTip = "Leetus has contributed to ii's <b>Stupid</b> Menu. He made minor optimizations to mods in the menu."},
 
-                new ButtonInfo { buttonText = "Graze", method =() => Process.Start("https://github.com/The-Graze"), isTogglable = false, toolTip = "Graze gave me permission to use their color detection system and Media Control buttons."},
                 new ButtonInfo { buttonText = "Zvbex", method =() => Process.Start("https://guns.lol/zvbexisking"), isTogglable = false, toolTip = "Zvbex gave me permission to use their initial platform detection system."},
                 new ButtonInfo { buttonText = "Shiny", method =() => Process.Start("https://github.com/Shiny003"), isTogglable = false, toolTip = "Shiny gave me permission to use their PlayFab display name spoof patch."},
                 new ButtonInfo { buttonText = "Will", method =() => Process.Start("https://github.com/64will64"), isTogglable = false, toolTip = "64Will64 gave me the idea to make body rotation mods and the Low FPS Movement mod."},
