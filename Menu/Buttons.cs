@@ -673,6 +673,8 @@ namespace Poison.Menu
                 new ButtonInfo { buttonText = "Zero Gravity", aliases = new[] { "No Gravity" }, postMethod = Movement.ZeroGravity, toolTip = "Disables gravity on your character."},
                 new ButtonInfo { buttonText = "High Gravity", aliases = new[] { "Mars Gravity" }, postMethod = Movement.HighGravity, toolTip = "Makes gravity higher on your character."},
                 new ButtonInfo { buttonText = "Reverse Gravity", aliases = new[] { "Flip Gravity" }, enableMethod = Movement.ReverseGravity, disableMethod = Movement.UnflipCharacter, toolTip = "Reverses gravity on your character."},
+                new ButtonInfo { buttonText = "Disable Space Gravity", method =() => Movement.ToggleSpaceGravity(false), disableMethod =() => Movement.ToggleSpaceGravity(true), toolTip = "Disables the main space map zone. This may fix fly."},
+                new ButtonInfo { buttonText = "Disable Planet Zones", method =() => Movement.TogglePlanetZones(false), disableMethod =() => Movement.TogglePlanetZones(true), toolTip = "Disables the planet zones that rotate your character and change the velocity in the space map."},
 
                 new ButtonInfo { buttonText = "Rewind <color=grey>[</color><color=green>T</color><color=grey>]</color>", aliases = new[] { "Reverse" }, method = Movement.Rewind, disableMethod = Movement.ClearRewind, toolTip = "Brings you back in time when holding <color=green>trigger</color>."},
                 new ButtonInfo { buttonText = "Macros", method =() => CurrentCategoryName = "Macros", isTogglable = false, toolTip = "Opens a category to manage your macros."},

@@ -25,6 +25,7 @@ using GorillaLocomotion;
 using GorillaLocomotion.Climbing;
 using GorillaLocomotion.Swimming;
 using GorillaNetworking;
+using GorillaTag.Gravity;
 using Photon.Pun;
 using Photon.Realtime;
 using Poison.Classes.Menu;
@@ -1674,6 +1675,15 @@ namespace Poison.Mods
             GTPlayer.Instance.UnsetGravityOverride(GTPlayer.Instance);
             GTPlayerTransform.ApplyRotationOverride(Quaternion.identity, Time.frameCount);
 
+        }
+
+        public static void ToggleSpaceGravity(bool on) =>
+            GetObject("SpaceMap/Space_Landing_V3/GravityZone_Spherical").SetActive(on);
+
+        public static void TogglePlanetZones(bool on)
+        {
+            foreach (var zone in GetAllType<PlanetZone>())
+                zone.enabled = on;
         }
 
         private static readonly List<object[]> playerPositions = new List<object[]>();
