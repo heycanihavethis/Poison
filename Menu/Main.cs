@@ -1312,7 +1312,7 @@ namespace Poison.Menu
                             GunLine.gameObject.SetActive(false);
                     }
 
-                    List<(long, float, PrimitiveType)> toRemoveVisualize = new List<(long, float, PrimitiveType)>();
+                    toRemoveVisualize.Clear();
                     foreach (KeyValuePair<(long, float, PrimitiveType), GameObject> key in Visuals.visualizePool)
                     {
                         if (!key.Value.activeSelf)
@@ -1323,10 +1323,10 @@ namespace Poison.Menu
                         else
                             key.Value.SetActive(false);
                     }
-                    foreach (var item in toRemoveVisualize)
-                        Visuals.visualizePool.Remove(item);
+                    for (int i = 0; i < toRemoveVisualize.Count; i++)
+                        Visuals.visualizePool.Remove(toRemoveVisualize[i]);
 
-                    List<string> toRemoveLabel = new List<string>();
+                    toRemoveLabel.Clear();
                     foreach (KeyValuePair<string, GameObject> label in Visuals.labelDictionary)
                     {
                         if (!label.Value.activeSelf)
@@ -1338,8 +1338,8 @@ namespace Poison.Menu
                             label.Value.SetActive(false);
                     }
 
-                    foreach (string item in toRemoveLabel)
-                        Visuals.labelDictionary.Remove(item);
+                    for (int i = 0; i < toRemoveLabel.Count; i++)
+                        Visuals.labelDictionary.Remove(toRemoveLabel[i]);
                 }
                 catch { }
                 #endregion
@@ -1372,6 +1372,8 @@ namespace Poison.Menu
             }
         }
         private static readonly List<string> postActions = new List<string>();
+        private static readonly List<(long, float, PrimitiveType)> toRemoveVisualize = new List<(long, float, PrimitiveType)>();
+        private static readonly List<string> toRemoveLabel = new List<string>();
         public static void Postfix()
         {
             try
@@ -7007,15 +7009,18 @@ jgs \_   _/ |Oo\
             public GameObject shell;
             public Image indicator;
 
+            private Renderer shellRenderer;
+
             public void Update()
             {
-                Renderer renderer = shell.GetComponent<Renderer>();
+                if (shellRenderer == null)
+                    shellRenderer = shell.GetComponent<Renderer>();
                 if (text.font != activeFont)
                     text.SafeSetFont(activeFont);
                 if (text.fontStyle != activeFontStyle)
                     text.SafeSetFontStyle(activeFontStyle);
-                if (renderer.sharedMaterial != CustomBoardManager.BoardMaterial)
-                    renderer.sharedMaterial = CustomBoardManager.BoardMaterial;
+                if (shellRenderer.sharedMaterial != CustomBoardManager.BoardMaterial)
+                    shellRenderer.sharedMaterial = CustomBoardManager.BoardMaterial;
             }
         }
 

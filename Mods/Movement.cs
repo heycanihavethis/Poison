@@ -405,10 +405,15 @@ namespace Poison.Mods
             }
         }
 
+        private static bool triggerFlyHeld;
         public static void TriggerFly()
         {
-            if (rightTrigger > 0.5f)
+            bool held = rightTrigger > 0.5f;
+            if (held)
                 GorillaTagger.Instance.rigidbody.linearVelocity = GorillaTagger.Instance.headCollider.transform.forward * FlySpeed;
+            else if (triggerFlyHeld)
+                GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
+            triggerFlyHeld = held;
         }
 
         public static bool noclip;
@@ -428,20 +433,26 @@ namespace Poison.Mods
                 if (noclip)
                 {
                     noclip = false;
+                    GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
                     UpdateClipColliders(true);
                 }
             }
         }
 
+        private static bool joystickFlyHeld;
         public static void JoystickFly()
         {
             Vector2 joy = leftJoystick;
+            bool held = Mathf.Abs(joy.x) > 0.3 || Mathf.Abs(joy.y) > 0.3;
 
-            if (Mathf.Abs(joy.x) > 0.3 || Mathf.Abs(joy.y) > 0.3)
+            if (held)
             {
                 Vector3 move = GorillaTagger.Instance.headCollider.transform.forward * joy.y + GorillaTagger.Instance.headCollider.transform.right * joy.x;
                 GorillaTagger.Instance.rigidbody.linearVelocity = move.normalized * FlySpeed;
             }
+            else if (joystickFlyHeld)
+                GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
+            joystickFlyHeld = held;
         }
 
         public static void BarkFly()
@@ -465,10 +476,14 @@ namespace Poison.Mods
                 BarkFly();
         }
 
+        private static bool handFlyHeld;
         public static void HandFly()
         {
             if (rightPrimary)
                 GorillaTagger.Instance.rigidbody.linearVelocity = ControllerUtilities.GetTrueRightHand().forward * FlySpeed;
+            else if (handFlyHeld)
+                GorillaTagger.Instance.rigidbody.linearVelocity = Vector3.zero;
+            handFlyHeld = rightPrimary;
         }
 
         public static void FlyTowardsGun()
