@@ -54,6 +54,8 @@ namespace Poison.Menu
 
                 new ButtonInfo { buttonText = "Join Discord", method = Important.JoinDiscord, isTogglable = false, toolTip = "Invites you to join the <b>Poison</b> Discord server.", legal = true},
 
+                new ButtonInfo { buttonText = "Session Snapshot", method = VapornizeExtras.SessionSnapshot, isTogglable = false, toolTip = "Shows your current room name, player count, and game mode locally.", legal = true},
+
                 new ButtonInfo { buttonText = "Settings", method =() => CurrentCategoryName = "Settings", isTogglable = false, toolTip = "Opens the settings tab.", legal = true},
                 new ButtonInfo { buttonText = "Friends", method =() => CurrentCategoryName = "Friends", isTogglable = false, toolTip = "Opens the friends tab.", legal = true},
                 new ButtonInfo { buttonText = "Players", method = Settings.PlayersTab, isTogglable = false, toolTip = "Opens the players tab.", legal = true},
