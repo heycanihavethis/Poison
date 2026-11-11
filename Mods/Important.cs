@@ -262,7 +262,9 @@ namespace Poison.Mods
         public static bool instantCreate;
         public static void CreateRoom(string roomName, bool isPublic, byte roomSize = 0, JoinType roomJoinType = JoinType.Solo)
         {
-            if (roomSize > 10 && !roomName.StartsWith("@"))
+            if (GorillaComputer.instance != null && GorillaComputer.instance.IsPlayerInVirtualStump())
+                roomName = ApplyVStumpRoomPrefix(roomName);
+            else if (roomSize > 10 && !roomName.StartsWith("@"))
                 roomName = $"@{roomName}";
             var netTrigger = PhotonNetworkController.Instance.currentJoinTrigger ?? GorillaComputer.instance.GetJoinTriggerForZone("forest");
             RoomConfig roomConfig = new RoomConfig
@@ -305,6 +307,18 @@ namespace Poison.Mods
             }
             else
                 NetworkSystem.Instance.ConnectToRoom(roomName, roomConfig);
+        }
+
+        public static string ApplyVStumpRoomPrefix(string roomName)
+        {
+            GorillaComputer computer = GorillaComputer.instance;
+            if (computer == null || !computer.IsPlayerInVirtualStump())
+                return roomName;
+
+            roomName = computer.StripVStumpRoomPrefix(roomName);
+            if (roomName.StartsWith("@"))
+                roomName = roomName[1..];
+            return computer.VStumpRoomFullPrepend + roomName;
         }
 
         public static void BroadcastRoom(string roomName, bool create, string key, string shuffler)

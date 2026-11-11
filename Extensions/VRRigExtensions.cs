@@ -137,9 +137,19 @@ namespace Poison.Extensions
                 suspiciouslyQuest++;
             */
 
-            if (!string.IsNullOrEmpty(platform) && Enum.TryParse(platform, out PlatformType result))
-                return result;
+            if (!string.IsNullOrEmpty(platform))
+            {
+                // Meta builds report "Oculus", which has no matching enum member
+                if (platform.Equals("Oculus", StringComparison.OrdinalIgnoreCase) || platform.Equals("Quest", StringComparison.OrdinalIgnoreCase))
+                    return PlatformType.Quest;
+
+                if (Enum.TryParse(platform, true, out PlatformType result))
+                    return result;
+            }
+
             int max = Math.Max(suspiciouslySteam, Math.Max(suspiciouslyPC, suspiciouslyQuest));
+            if (max == 0)
+                return PlatformType.Unknown;
 
             if (suspiciouslySteam == max) return PlatformType.Steam;
             if (suspiciouslyQuest == max) return PlatformType.Quest;

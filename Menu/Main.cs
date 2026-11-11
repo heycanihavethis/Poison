@@ -5549,7 +5549,7 @@ namespace Poison.Menu
             lastRoom = PhotonNetwork.CurrentRoom.Name;
 
             if (!disableRoomNotifications)
-                NotificationManager.SendNotification($"<color=grey>[</color><color=blue>JOIN ROOM</color><color=grey>]</color> Room Code: {lastRoom}");
+                NotificationManager.SendNotification($"<color=grey>[</color><color=blue>JOIN ROOM</color><color=grey>]</color> Room Code: {GorillaComputer.instance?.GetVStumpRoomDisplayName(lastRoom) ?? lastRoom}");
 
             OnMasterClientSwitch(NetworkSystem.Instance.MasterClient);
             RPCProtection();
@@ -5566,7 +5566,7 @@ namespace Poison.Menu
                 NotificationManager.ClearAllNotifications();
 
             if (!disableRoomNotifications)
-                NotificationManager.SendNotification($"<color=grey>[</color><color=blue>LEAVE ROOM</color><color=grey>]</color> Room Code: {lastRoom}");
+                NotificationManager.SendNotification($"<color=grey>[</color><color=blue>LEAVE ROOM</color><color=grey>]</color> Room Code: {GorillaComputer.instance?.GetVStumpRoomDisplayName(lastRoom) ?? lastRoom}");
 
             CleanVisualsOnLeave();
             RPCProtection();

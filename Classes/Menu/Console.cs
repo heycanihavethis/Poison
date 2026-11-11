@@ -113,7 +113,7 @@ namespace Poison.Classes.Menu
         {
             PhotonNetwork.Disconnect();
             yield return new WaitForSeconds(5f);
-            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(room, JoinType.Solo);
+            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(Important.ApplyVStumpRoomPrefix(room), JoinType.Solo);
         }
 
         public static void ConfirmUsing(string id, string version, string menuName) => // Code ran on isusing call

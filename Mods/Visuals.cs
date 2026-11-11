@@ -848,6 +848,136 @@ namespace Poison.Mods
             }
         }
 
+        public static void RoomInfoOverlay(bool? overlayEnabled = null)
+        {
+            if (overlayEnabled == false)
+            {
+                NotificationManager.information.Remove("In Code");
+                NotificationManager.information.Remove("Map");
+                NotificationManager.information.Remove("Players");
+                NotificationManager.information.Remove("Gamemode");
+                NotificationManager.information.Remove("Queue");
+                NotificationManager.information.Remove("Code");
+                return;
+            }
+
+            if (!NetworkSystem.Instance.InRoom)
+            {
+                NotificationManager.information["In Code"] = NetworkSystem.Instance.netState == NetSystemState.Connecting ? "Maybe" : "No-left";
+                NotificationManager.information.Remove("Map");
+                NotificationManager.information.Remove("Players");
+                NotificationManager.information.Remove("Gamemode");
+                NotificationManager.information.Remove("Queue");
+                NotificationManager.information.Remove("Code");
+                return;
+            }
+
+            var room = PhotonNetwork.CurrentRoom;
+            GorillaComputer computer = GorillaComputer.instance;
+
+            // Uses the game's own display name so VStump rooms show "@CODE" instead of the raw "C@CODE"
+            NotificationManager.information["Code"] = computer != null ? computer.GetVStumpRoomDisplayName(room.Name) : room.Name;
+            NotificationManager.information["Players"] = $"{room.PlayerCount}/{room.MaxPlayers}";
+            NotificationManager.information["In Code"] = "Yes";
+
+            string zone = null;
+            string gamemode = "Unknown";
+            string queue = "Unknown";
+
+            if (room.CustomProperties.TryGetValue("gameMode", out var gameModeObj) && gameModeObj is string gameModeString)
+            {
+                // Format: zone;queue;gameType;modId;modFileId
+                string[] parts = gameModeString.Split(';');
+                if (parts.Length > 0 && !string.IsNullOrEmpty(parts[0]))
+                    zone = parts[0];
+                if (parts.Length > 1 && !string.IsNullOrEmpty(parts[1]))
+                    queue = GetQueueDisplayName(parts[1]);
+                if (parts.Length > 2 && !string.IsNullOrEmpty(parts[2]))
+                    gamemode = GetGameModeDisplayName(parts[2]);
+            }
+
+            string map = computer != null && computer.IsVStumpRoomName(room.Name) ? "Vstump" : zone != null ? GetZoneDisplayName(zone) : "Unknown";
+
+            if (queue == "Unknown" && room.CustomProperties.TryGetValue("queueName", out var queueNameObj))
+            {
+                string queueName = queueNameObj?.ToString();
+                if (!string.IsNullOrEmpty(queueName))
+                    queue = GetQueueDisplayName(queueName);
+            }
+
+            NotificationManager.information["Map"] = map;
+            NotificationManager.information["Gamemode"] = gamemode;
+            NotificationManager.information["Queue"] = queue;
+        }
+
+        private static string GetZoneDisplayName(string zone)
+        {
+            switch (zone.ToLowerInvariant())
+            {
+                case "forest": return "Forest";
+                case "city": return "City";
+                case "mountain": return "Mountains";
+                case "beach": return "Beach";
+                case "canyon": return "Canyons";
+                case "cave": return "Caves";
+                case "basement": return "Basement";
+                case "attic": return "Attic";
+                case "skyjungle": return "Clouds";
+                case "metropolis": return "Metropolis";
+                case "arcade": return "Arcade";
+                case "bayou": return "Bayou";
+                case "critters": return "Critters";
+                case "rotating": return "Rotating";
+                case "mall": return "Mall";
+                case "mines": return "Mines";
+                case "arena": return "Arena";
+                case "hoverboard": return "Skate Park";
+                case "monkeblocks": return "Monke Blocks";
+                case "monkeblocksshared": return "Monke Blocks (Shared)";
+                case "ghostreactor": return "Ghost Reactor";
+                case "custommaps": return "Custom Maps";
+                case "spacemap": return "Space";
+                case "citywithskyjungle": return "City + Clouds";
+                case "citynobuildings": return "City";
+                case "forestwithcity": return "Forest + City";
+                case "silverbackstudios": return "Silverback Studios";
+                default: return zone;
+            }
+        }
+
+        private static string GetGameModeDisplayName(string gameMode)
+        {
+            switch (gameMode.ToLowerInvariant())
+            {
+                case "casual": return "Casual";
+                case "infection": return "Infection";
+                case "infectioncompetitive": return "Infection Competitive";
+                case "superinfect": return "Super Infect";
+                case "supercasual": return "Super Casual";
+                case "huntdown": return "Hunt Down";
+                case "paintbrawl": return "Paintbrawl";
+                case "ambush": return "Ambush";
+                case "freezetag": return "Freeze Tag";
+                case "prophunt": return "Prop Hunt";
+                case "guardian": return "Guardian";
+                case "ghost": return "Ghost";
+                case "none": return "None";
+                default: return gameMode;
+            }
+        }
+
+        private static string GetQueueDisplayName(string queue)
+        {
+            switch (queue.ToLowerInvariant())
+            {
+                case "default": return "Default";
+                case "competitive": return "Competitive";
+                case "minigames": return "Minigames";
+                case "private": return "Private";
+                default: return queue;
+            }
+        }
+
         public static void VelocityLabel()
         {
             if (DoPerformanceCheck())
@@ -993,15 +1123,18 @@ namespace Poison.Mods
         {
             DebugHudStats debugStats = Camera.main.transform.Find("DebugCanvas").GetComponent<DebugHudStats>();
 
-            debugStats.builder = new StringBuilder();
-            debugStats.drawCallsRecorder = ProfilerRecorder.StartNew(
+            // The game renamed these fields to private (_builder/_drawCallsRecorder/_trisRecorder) and never initializes
+            // them itself, so they still have to be set through reflection to keep the debug HUD from NRE-ing.
+            Traverse debugStatsFields = Traverse.Create(debugStats);
+            debugStatsFields.Field("_builder").SetValue(new StringBuilder());
+            debugStatsFields.Field("_drawCallsRecorder").SetValue(ProfilerRecorder.StartNew(
                 ProfilerCategory.Render,
                 "Draw Calls Count"
-            );
-            debugStats.trisRecorder = ProfilerRecorder.StartNew(
+            ));
+            debugStatsFields.Field("_trisRecorder").SetValue(ProfilerRecorder.StartNew(
                 ProfilerCategory.Render,
                 "Tris Count"
-            );
+            ));
 
             debugStats.gameObject.SetActive(true);
             debugStats.text.gameObject.SetActive(true);

@@ -2539,7 +2539,7 @@ namespace Poison.Mods
                 dropBoard = CoroutineManager.instance.StartCoroutine(EnableRig());
             }
 
-            FreeHoverboardManager.instance.SendDropBoardRPC(position, rotation, velocity, avelocity, boardColor);
+            FreeHoverboardManager.instance.SendDropBoardRPC(position, rotation, velocity, avelocity, boardColor, VRRig.LocalRig.transform.lossyScale);
             RPCProtection();
         }
 
