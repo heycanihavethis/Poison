@@ -5760,10 +5760,10 @@ exit 0";
             { ControllerBinding.RightSecondaryButton, Key.R },
             { ControllerBinding.LeftPrimaryButton, Key.F },
             { ControllerBinding.LeftSecondaryButton, Key.G },
-            { ControllerBinding.LeftGrip, Key.LeftBracket },
-            { ControllerBinding.RightGrip, Key.RightBracket },
-            { ControllerBinding.LeftTrigger, Key.Minus },
-            { ControllerBinding.RightTrigger, Key.Equals },
+            { ControllerBinding.LeftGrip, Key.Digit1 },
+            { ControllerBinding.RightGrip, Key.Digit2 },
+            { ControllerBinding.LeftTrigger, Key.Digit3 },
+            { ControllerBinding.RightTrigger, Key.Digit4 },
             { ControllerBinding.JoystickClick, Key.Enter },
             { ControllerBinding.LeftOverride, Key.LeftAlt }
         };
